@@ -13,6 +13,7 @@
 #ifndef mAIDA_FinalStateFiller_h
 #define mAIDA_FinalStateFiller_h
 
+#include <memory>
 #include "FinalState.h"
 #include "Reader.h"
 
@@ -23,7 +24,7 @@ namespace mAIDA {
   private:
 
     TFile* _out_file;
-    TTree* _out_tree;
+    TTree* _out_tree; 
     
     bool _trilepton;
     bool _ssdilepton;
@@ -34,18 +35,51 @@ namespace mAIDA {
     
   public:
 
-    FinalStateFiller();
+    FinalStateFiller(const char *fname, const char *tname);
     virtual ~FinalStateFiller();
 
     void Loop();
     
-    void Use_trilepton();
-    void Use_ssdilepton();
-    void Use_osdilepton();
-    void Use_fourlepton();
+    void Make_trilepton();
+    void Make_ssdilepton();
+    void Make_osdilepton();
+    void Make_fourlepton();
 
   };
 
 }
+
+inline void mAIDA::FinalStateFiller::Make_trilepton()
+{
+  _trilepton  = true;
+  _fourlepton = false;
+  _osdilepton = false;
+  _ssdilepton = false;
+}
+
+inline void mAIDA::FinalStateFiller::Make_fourlepton()
+{
+  _trilepton  = false;
+  _fourlepton = true;
+  _osdilepton = false;
+  _ssdilepton = false;
+}
+
+inline void mAIDA::FinalStateFiller::Make_osdilepton()
+{
+  _trilepton  = false;
+  _fourlepton = false;
+  _osdilepton = true;
+  _ssdilepton = false;
+}
+
+inline void mAIDA::FinalStateFiller::Make_ssdilepton()
+{
+  _trilepton  = false;
+  _fourlepton = false;
+  _osdilepton = false;
+  _ssdilepton = true;
+}
+
 
 #endif

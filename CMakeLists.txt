@@ -45,3 +45,5 @@ add_library(
   )
 
 target_link_libraries(mAIDA ${ROOT_LIBRARIES})
+
+add_subdirectory(producers)

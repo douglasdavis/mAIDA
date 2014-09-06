@@ -5,44 +5,78 @@
  */
 
 #include "FinalStateFiller.h"
+#include "Utils.h"
+#include <iostream>
 
-mAIDA::FinalStateFiller::FinalStateFiller() {}
+mAIDA::FinalStateFiller::FinalStateFiller(const char *fname, const char* tname)
+{
+  fRealChain = new TChain("physics");
+  _out_file = new TFile(fname,"RECREATE");
+  _out_tree = new TTree(tname,tname);
+}
 
 mAIDA::FinalStateFiller::~FinalStateFiller() {}
 
 void mAIDA::FinalStateFiller::Loop()
 {
-  //
+  InitRealChain();
+  if ( fRealChain == 0 ) return;
+  Long64_t nentries = fRealChain->GetEntries();
+
+  mAIDA::FinalState FinalState;
+  _out_tree->Branch("FinalState",&FinalState);
+  
+  if ( _ssdilepton ) FinalState.SetInteractionType("ssdilepton");
+  if ( _osdilepton ) FinalState.SetInteractionType("osdilepton");
+  if ( _trilepton  ) FinalState.SetInteractionType("trilepton");
+  if ( _fourlepton ) FinalState.SetInteractionType("fourlepton");
+  
+  for ( auto eventid = 0; eventid < nentries; ++eventid ) {
+    
+    fRealChain->GetEntry(eventid);
+    if ( eventid%1000 == 0 ) std::cout << "Event: " << eventid << std::endl;
+
+    for ( auto iel = 0; iel < el_n; ++iel ) {
+      if ( mAIDA::good_el(el_pt->at(iel),el_eta->at(iel)) ) {
+	mAIDA::Lepton el;
+	el.Set_pdgId(mAIDA::k_el);
+	el.Set_E(el_E->at(iel));
+	el.Set_pt(el_pt->at(iel));
+	el.Set_eta(el_eta->at(iel));
+	el.Set_phi(el_phi->at(iel));
+	el.Set_charge(el_charge->at(iel));
+	el.Set_px(999999);
+	el.Set_py(999999);
+	el.Set_pz(999999);
+	FinalState.AddLepton(el);
+      } // if pass pt and eta cut
+    } // for all electrons
+
+    for ( auto imu = 0; imu < mu_n; ++imu ) {
+      if ( mAIDA::good_mu(mu_pt->at(imu),mu_eta->at(imu)) ) {
+	mAIDA::Lepton mu;
+	mu.Set_pdgId(mAIDA::k_mu);
+	mu.Set_E(mu_E->at(imu));
+	mu.Set_pt(mu_pt->at(imu));
+	mu.Set_eta(mu_eta->at(imu));
+	mu.Set_phi(mu_phi->at(imu));
+	mu.Set_charge(mu_charge->at(imu));
+	mu.Set_px(mu_px->at(imu));
+	mu.Set_py(mu_py->at(imu));
+	mu.Set_pz(mu_pz->at(imu));
+	FinalState.AddLepton(mu);
+      } // if pass pt and eta cut
+    } // for all muons
+
+    _out_tree->Fill();
+    FinalState.Clear();
+    //FinalState.Leptons().clear();
+    //FinalState.Jets().clear();
+    
+  } // for all events
+
+  _out_tree->Write();
+  _out_file->Close();
+  
 }
 
-void mAIDA::FinalStateFiller::Use_trilepton()
-{
-  _trilepton  = true;
-  _fourlepton = false;
-  _osdilepton = false;
-  _ssdilepton = false;
-}
-
-void mAIDA::FinalStateFiller::Use_fourlepton()
-{
-  _trilepton  = false;
-  _fourlepton = true;
-  _osdilepton = false;
-  _ssdilepton = false;
-}
-
-void mAIDA::FinalStateFiller::Use_osdilepton()
-{
-  _trilepton  = false;
-  _fourlepton = false;
-  _osdilepton = true;
-  _ssdilepton = false;
-}
-
-void mAIDA::FinalStateFiller::Use_ssdilepton()
-{
-  _trilepton  = false;
-  _fourlepton = false;
-  _osdilepton = false;
-  _ssdilepton = true;
-}

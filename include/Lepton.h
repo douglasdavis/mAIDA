@@ -25,10 +25,10 @@ namespace mAIDA {
     float _pt;
     float _eta;
     float _phi;
+    float _charge;
     float _px;
     float _py;
     float _pz;
-    float _charge;
     
     ClassDef(Lepton,1);
 
