@@ -9,5 +9,6 @@
 #pragma link C++ class std::vector<mAIDA::Jet>+;
 #pragma link C++ class std::vector<mAIDA::Lepton>+;
 #pragma link C++ class mAIDA::FinalState+;
+#pragma link C++ class mAIDA::FinalStateFiller+;
 
 #endif

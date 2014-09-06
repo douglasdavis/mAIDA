@@ -25,7 +25,7 @@ namespace mAIDA {
     float _eta;
     float _phi;
     float _m;
-    float _WMV1;
+    float _MV1;
 
     ClassDef(Jet,1);
     
@@ -33,36 +33,37 @@ namespace mAIDA {
     
     Jet();
     virtual ~Jet();
-    void Set_E(const float i);      //!< E setter
-    void Set_pt(const float i);     //!< pt setter
-    void Set_eta(const float i);    //!< eta setter
-    void Set_phi(const float i);    //!< phi setter
-    void Set_m(const float i);      //!< m setter
-    void Set_WMV1(const float i);   //!< WMV1 setter
+
+    void Set_E(const float i);     //!< E setter
+    void Set_pt(const float i);    //!< pt setter
+    void Set_eta(const float i);   //!< eta setter
+    void Set_phi(const float i);   //!< phi setter
+    void Set_m(const float i);     //!< m setter
+    void Set_MV1(const float i);   //!< MV1 setter
     
-    float E()    const;             //!< E getter
-    float pt()   const;             //!< pt getter
-    float eta()  const;             //!< eta getter
-    float phi()  const;             //!< phi getter
-    float m()    const;             //!< m getter
-    float WMV1() const;             //!< WMV1 getter
+    float E()   const;             //!< E getter
+    float pt()  const;             //!< pt getter
+    float eta() const;             //!< eta getter
+    float phi() const;             //!< phi getter
+    float m()   const;             //!< m getter
+    float MV1() const;             //!< MV1 getter
 
   };
   
 }
 
-inline void mAIDA::Jet::Set_E(const float i)    { _E    = i; }
-inline void mAIDA::Jet::Set_pt(const float i)   { _pt   = i; }
-inline void mAIDA::Jet::Set_eta(const float i)  { _eta  = i; }
-inline void mAIDA::Jet::Set_phi(const float i)  { _phi  = i; }
-inline void mAIDA::Jet::Set_m(const float i)    { _m    = i; }
-inline void mAIDA::Jet::Set_WMV1(const float i) { _WMV1 = i; }
+inline void mAIDA::Jet::Set_E(const float i)   { _E   = i; }
+inline void mAIDA::Jet::Set_pt(const float i)  { _pt  = i; }
+inline void mAIDA::Jet::Set_eta(const float i) { _eta = i; }
+inline void mAIDA::Jet::Set_phi(const float i) { _phi = i; }
+inline void mAIDA::Jet::Set_m(const float i)   { _m   = i; }
+inline void mAIDA::Jet::Set_MV1(const float i) { _MV1 = i; }
 
-inline float mAIDA::Jet::E()    const { return _E;    }
-inline float mAIDA::Jet::pt()   const { return _pt;   }
-inline float mAIDA::Jet::eta()  const { return _eta;  }
-inline float mAIDA::Jet::phi()  const { return _phi;  }
-inline float mAIDA::Jet::m()    const { return _m;    }
-inline float mAIDA::Jet::WMV1() const { return _WMV1; }
+inline float mAIDA::Jet::E()   const { return _E;   }
+inline float mAIDA::Jet::pt()  const { return _pt;  }
+inline float mAIDA::Jet::eta() const { return _eta; }
+inline float mAIDA::Jet::phi() const { return _phi; }
+inline float mAIDA::Jet::m()   const { return _m;   }
+inline float mAIDA::Jet::MV1() const { return _MV1; }
 
 #endif //* mAIDA_Jet_h *//
