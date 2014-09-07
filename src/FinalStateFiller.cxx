@@ -26,11 +26,6 @@ void mAIDA::FinalStateFiller::Loop()
   mAIDA::FinalState FinalState;
   _out_tree->Branch("FinalState",&FinalState);
   
-  if ( _ssdilepton ) FinalState.SetInteractionType("ssdilepton");
-  if ( _osdilepton ) FinalState.SetInteractionType("osdilepton");
-  if ( _trilepton  ) FinalState.SetInteractionType("trilepton");
-  if ( _fourlepton ) FinalState.SetInteractionType("fourlepton");
-  
   for ( auto eventid = 0; eventid < nentries; ++eventid ) {
     
     fRealChain->GetEntry(eventid);
@@ -68,10 +63,49 @@ void mAIDA::FinalStateFiller::Loop()
       } // if pass pt and eta cut
     } // for all muons
 
-    _out_tree->Fill();
+    for ( auto ijet = 0; ijet < jet_AntiKt4LCTopo_n; ++ijet ) {
+      if ( mAIDA::good_jet(jet_AntiKt4LCTopo_pt->at(ijet),jet_AntiKt4LCTopo_eta->at(ijet)) ) {
+	mAIDA::Jet jet;
+	jet.Set_E(jet_AntiKt4LCTopo_E->at(ijet));
+	jet.Set_pt(jet_AntiKt4LCTopo_pt->at(ijet));
+	jet.Set_eta(jet_AntiKt4LCTopo_eta->at(ijet));
+	jet.Set_phi(jet_AntiKt4LCTopo_phi->at(ijet));
+	jet.Set_MV1(jet_AntiKt4LCTopo_flavor_weight_MV1->at(ijet));
+	FinalState.AddJet(jet);
+      }
+    }
+
+    if ( _ssdilepton ) {
+      if ( ( FinalState.Leptons().size() == 2 ) &&
+	   ( FinalState.Leptons().at(0).charge() + FinalState.Leptons().at(1).charge() != 0 ) ) {
+	FinalState.SetInteractionType("ssdilepton");
+	_out_tree->Fill();
+      }
+    }
+
+    if ( _osdilepton ) {
+      if ( ( FinalState.Leptons().size() == 2 ) &&
+	   ( FinalState.Leptons().at(1).charge() + FinalState.Leptons().at(1).charge() == 0 ) ) {
+	FinalState.SetInteractionType("osdilepton");
+	_out_tree->Fill();
+      }
+    }
+
+    if ( _trilepton ) {
+      if ( FinalState.Leptons().size() == 3 ) {
+	FinalState.SetInteractionType("trilepton");
+	_out_tree->Fill();
+      }
+    }
+    
+    if ( _fourlepton ) {
+      if ( FinalState.Leptons().size() == 4 ) {
+	FinalState.SetInteractionType("fourlepton");
+	_out_tree->Fill();
+      }
+    }
+
     FinalState.Clear();
-    //FinalState.Leptons().clear();
-    //FinalState.Jets().clear();
     
   } // for all events
 

@@ -26,7 +26,16 @@ namespace mAIDA {
 
   inline bool good_mu(const float pt, const float eta)
   {
-    if ( ( pt > 25000.0 ) &&
+    if ( ( pt > 20000.0 ) &&
+	 ( std::fabs(eta) < 2.5 ) ) {
+      return true;
+    }
+    return false;
+  }
+
+  inline bool good_jet(const float pt, const float eta)
+  {
+    if ( ( pt > 30000.0 ) &&
 	 ( std::fabs(eta) < 2.5 ) ) {
       return true;
     }

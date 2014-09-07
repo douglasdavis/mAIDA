@@ -26,7 +26,8 @@ namespace mAIDA {
     std::string                _InteractionType;
     std::vector<mAIDA::Jet>    _Jets;
     std::vector<mAIDA::Lepton> _Leptons;
-
+    float                      _MET;
+    
     ClassDef(FinalState,1);
     
   public:
@@ -38,10 +39,13 @@ namespace mAIDA {
     void AddLepton(const mAIDA::Lepton& lepton);
     void AddJet(const mAIDA::Jet& jet);
     void Clear();
+    void Set_MET(const float i);
     
     const std::string&                InteractionType() const;
     const std::vector<mAIDA::Lepton>& Leptons()          const;
     const std::vector<mAIDA::Jet>&    Jets()             const;
+
+    float MET() const;
     
   };
 
@@ -51,9 +55,11 @@ inline void mAIDA::FinalState::SetInteractionType(const std::string name) { _Int
 inline void mAIDA::FinalState::AddLepton(const mAIDA::Lepton& lepton)     { _Leptons.push_back(lepton);      }
 inline void mAIDA::FinalState::AddJet(const mAIDA::Jet& jet)              { _Jets.push_back(jet);            }
 inline void mAIDA::FinalState::Clear()                                    { _Leptons.clear(); _Jets.clear(); }
+inline void mAIDA::FinalState::Set_MET(const float i)                     { _MET = i;                        }
 
 inline const std::string&                mAIDA::FinalState::InteractionType() const { return _InteractionType; }
 inline const std::vector<mAIDA::Lepton>& mAIDA::FinalState::Leptons()         const { return _Leptons;         }
 inline const std::vector<mAIDA::Jet>&    mAIDA::FinalState::Jets()            const { return _Jets;            }
+inline       float                       mAIDA::FinalState::MET()             const { return _MET;             }
 
 #endif //* mAIDA_FinalState_h *//

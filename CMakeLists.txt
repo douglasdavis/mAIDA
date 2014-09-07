@@ -15,12 +15,14 @@ else()
   message("-- ROOT 6 set OFF")
 endif()
 
-find_package(ROOT REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)
 include_directories("${Boost_INCLUDE_DIRS}")
+link_directories("${Boost_LIBRARY_DIR}")
 
+find_package(ROOT REQUIRED)
 include_directories("${ROOT_INCLUDE_DIR}")
 link_directories("${ROOT_LIBRARY_DIR}")
+
 include_directories("${CMAKE_SOURCE_DIR}")
 include_directories("${CMAKE_SOURCE_DIR}/include")
 

@@ -37,25 +37,25 @@ namespace mAIDA {
     Lepton();
     virtual ~Lepton();
 
-    void Set_pdgId(const int i);
-    void Set_E(const float i);
-    void Set_pt(const float i);
-    void Set_eta(const float i);
-    void Set_phi(const float i);
-    void Set_px(const float i);
-    void Set_py(const float i);
-    void Set_pz(const float i);
-    void Set_charge(const float i);
+    void Set_pdgId(const int i);     //!< pdgId setter
+    void Set_E(const float i);       //!< E setter
+    void Set_pt(const float i);      //!< pt setter
+    void Set_eta(const float i);     //!< eta setter
+    void Set_phi(const float i);     //!< phi setter
+    void Set_px(const float i);      //!< px setter
+    void Set_py(const float i);      //!< py setter
+    void Set_pz(const float i);      //!< pz setter
+    void Set_charge(const float i);  //!< charge setter
     
-    int   pdgId()  const;
-    float E()      const;
-    float pt()     const;
-    float eta()    const;
-    float phi()    const;
-    float px()     const;
-    float py()     const;
-    float pz()     const;
-    float charge() const;
+    int   pdgId()  const;            //!< pdgId getter
+    float E()      const;            //!< E getter
+    float pt()     const;            //!< pt getter
+    float eta()    const;            //!< eta getter
+    float phi()    const;            //!< phi getter
+    float px()     const;            //!< px getter
+    float py()     const;            //!< py getter
+    float pz()     const;            //!< pz getter
+    float charge() const;            //!< charge getter
 
   };
 

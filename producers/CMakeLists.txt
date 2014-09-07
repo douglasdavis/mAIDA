@@ -1,2 +1,2 @@
-add_executable(fst fst.cxx)
-target_link_libraries(fst mAIDA ${ROOT_LIBRARIES})
+add_executable(mAIDA.exe mAIDA.cxx)
+target_link_libraries(mAIDA.exe mAIDA ${ROOT_LIBRARIES} ${Boost_PROGRAM_OPTIONS_LIBRARY})
