@@ -11,5 +11,6 @@
 #pragma link C++ class mAIDA::FinalState+;
 #pragma link C++ class mAIDA::FinalStateFiller+;
 #pragma link C++ class mAIDA::VariableFiller+;
+#pragma link C++ class mAIDA::MVASigBkg+;
 
 #endif

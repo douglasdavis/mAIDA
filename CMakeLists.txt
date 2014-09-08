@@ -34,6 +34,7 @@ ROOT_GENERATE_DICTIONARY(
   include/FinalState.h
   include/FinalStateFiller.h
   include/VariableFiller.h
+  include/MVASigBkg.h
   LINKDEF include/LinkDef.h
   )
 
@@ -47,6 +48,6 @@ add_library(
   mAIDAdict
   )
 
-target_link_libraries(mAIDA ${ROOT_LIBRARIES})
+target_link_libraries(mAIDA ${ROOT_LIBRARIES} TMVA)
 
 add_subdirectory(producers)
