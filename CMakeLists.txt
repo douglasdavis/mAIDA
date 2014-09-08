@@ -33,6 +33,7 @@ ROOT_GENERATE_DICTIONARY(
   include/Lepton.h
   include/FinalState.h
   include/FinalStateFiller.h
+  include/VariableFiller.h
   LINKDEF include/LinkDef.h
   )
 

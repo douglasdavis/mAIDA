@@ -13,7 +13,6 @@
 #ifndef mAIDA_FinalStateFiller_h
 #define mAIDA_FinalStateFiller_h
 
-#include <memory>
 #include "FinalState.h"
 #include "Reader.h"
 

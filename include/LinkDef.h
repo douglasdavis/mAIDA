@@ -10,5 +10,6 @@
 #pragma link C++ class std::vector<mAIDA::Lepton>+;
 #pragma link C++ class mAIDA::FinalState+;
 #pragma link C++ class mAIDA::FinalStateFiller+;
+#pragma link C++ class mAIDA::VariableFiller+;
 
 #endif

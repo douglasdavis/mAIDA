@@ -85,7 +85,7 @@ void mAIDA::FinalStateFiller::Loop()
 
     if ( _osdilepton ) {
       if ( ( FinalState.Leptons().size() == 2 ) &&
-	   ( FinalState.Leptons().at(1).charge() + FinalState.Leptons().at(1).charge() == 0 ) ) {
+	   ( FinalState.Leptons().at(0).charge() + FinalState.Leptons().at(1).charge() == 0 ) ) {
 	FinalState.SetInteractionType("osdilepton");
 	_out_tree->Fill();
       }
