@@ -1,3 +1,9 @@
+/** @file Jet.cxx
+ *  @brief mAIDA::Jet class implementation
+ *
+ *  @author Douglas Davis < drd25@phy.duke.edu >
+ */
+
 #include "Jet.h"
 
 namespace mAIDA {

@@ -1,6 +1,6 @@
 /** @file Reader.h
- *  @brief mAIDA::reader class header
- *  @class mAIDA::reader
+ *  @brief mAIDA::Reader class header
+ *  @class mAIDA::Reader
  *  @brief physics D3PD reader
  *
  *  This class yields the variables

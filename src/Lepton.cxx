@@ -1,3 +1,9 @@
+/** @file Lepton.cxx
+ *  @brief mAIDA::Lepton class implementation
+ *
+ *  @author Douglas Davis < drd25@phy.duke.edu >
+ */
+
 #include "Lepton.h"
 
 namespace mAIDA {
