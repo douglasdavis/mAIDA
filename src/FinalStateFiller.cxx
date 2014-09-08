@@ -75,6 +75,8 @@ void mAIDA::FinalStateFiller::Loop()
       }
     }
 
+    FinalState.Set_MET(MET_RefFinal_tightpp_sumet);
+    
     if ( _ssdilepton ) {
       if ( ( FinalState.Leptons().size() == 2 ) &&
 	   ( FinalState.Leptons().at(0).charge() + FinalState.Leptons().at(1).charge() != 0 ) ) {

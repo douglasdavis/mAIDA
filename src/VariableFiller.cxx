@@ -13,10 +13,11 @@ namespace mAIDA {
   void VariableFiller::Loop(const char* fname)
   {
     
-    TFile *ofile =     new TFile(fname,"RECREATE");
+    TFile *ofile      = new TFile(fname,"RECREATE");
     TTree *mvavartree = new TTree("mvavartree","mvavartree");
 
     float MET;
+    float ht;
     int   njets;
     int   njets_b;
 
@@ -30,6 +31,7 @@ namespace mAIDA {
     float lj_eta;
     float sj_eta;
 
+    mvavartree->Branch("ht",     &ht,     "ht/F");
     mvavartree->Branch("MET",    &MET,    "MET/F");
     mvavartree->Branch("njets",  &njets,  "njets/I");
     mvavartree->Branch("njets_b",&njets_b,"njets_b/I");
@@ -47,24 +49,40 @@ namespace mAIDA {
     mAIDA::FinalState *fs = new mAIDA::FinalState();
     _in_tree->SetBranchAddress("FinalState",&fs);
 
+    // loop over each final state
     for ( auto ifs = 0; ifs < _in_tree->GetEntries(); ++ifs ) {
+      
       _in_tree->GetEntry(ifs);
 
-      MET = fs->MET();
-      njets = fs->Jets().size();
-      
-      mAIDA::Lepton ll;
-      mAIDA::Lepton sl;
-      mAIDA::Jet    lj;
-      mAIDA::Jet    sj;
+      // directly readable vars
+      MET     = fs->MET();
+      njets   = fs->Jets().size();
 
+      // these vars need to be set to zero at the beginning
+      // of each iteration because they are summed up
+      njets_b = 0;
+      ht      = 0;
+
+      // declare particles to be used for
+      // tree entries
+      mAIDA::Lepton ll; // leading lepton
+      mAIDA::Lepton sl; // second lepton
+      mAIDA::Jet    lj; // leading jet
+      mAIDA::Jet    sj; // second jet
+
+      // var used to determine leading lepton/jet
       float current_max = -9999;
+
+      // loop through all leptons for ll determination and add to ht variable
       for ( auto lep : fs->Leptons() ) {
 	if ( lep.pt() > current_max ) {
+	  ht += lep.pt();
 	  current_max = lep.pt();
 	  ll = lep;
 	}
       }
+
+      // loop through all leptons again to detemine second lepton
       current_max = -9e10;
       for ( auto lep : fs->Leptons() ) {
 	if ( ( lep.pt() > current_max ) && ( lep.pt() < ll.pt() ) ) {
@@ -73,6 +91,7 @@ namespace mAIDA {
 	}
       }
 
+      // if no jets set all the leading jet vars to lame shit
       if ( fs->Jets().size() == 0 ) {
 	lj.Set_pt(-99);
 	sj.Set_pt(-99);
@@ -80,6 +99,7 @@ namespace mAIDA {
 	sj.Set_eta(-10);
       }
 
+      // if only 1 jet set leading jet/second jet to same thing
       if ( fs->Jets().size() == 1 ) {
 	lj.Set_eta(fs->Jets().at(0).eta());
 	lj.Set_pt(fs->Jets().at(0).pt());
@@ -87,13 +107,17 @@ namespace mAIDA {
 	sj.Set_pt(lj.pt());
       }
 	
+      // loop through all jets for lj determination and add to ht variable
       current_max = -9e10;
       for ( auto jet : fs->Jets() ) {
 	if ( jet.pt() > current_max ) {
+	  ht += jet.pt();
 	  current_max = jet.pt();
 	  lj = jet;
 	}
       }
+
+      // loop through all jets again to determine second jet
       current_max = -9e10;
       for ( auto jet : fs->Jets() ) {
 	if ( ( jet.pt() > current_max ) && ( jet.pt() < lj.pt() ) ) {
@@ -102,6 +126,8 @@ namespace mAIDA {
 	}
       }
 
+      // print to let user know something bad happened (i.e. leading jet pt
+      // should be greater than second jet pt)
       if ( sj.pt() > lj.pt() ) { std::cout << "BAD JET STUFF" << std::endl; }
       if ( sl.pt() > ll.pt() ) { std::cout << "BAD LEP STUFF" << std::endl; }
       
@@ -121,6 +147,7 @@ namespace mAIDA {
 
     mvavartree->Write();
     ofile->Close();
-  }
 
+  }
+  
 }

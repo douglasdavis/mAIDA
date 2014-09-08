@@ -1,8 +1,16 @@
+// mAIDA
 #include "FinalStateFiller.h"
 #include "VariableFiller.h"
+#include "MVASigBkg.h"
+// Boost
 #include "boost/program_options.hpp"
+// C/C++
 #include <iostream>
 #include <string>
+#include <fstream>
+// TMVA
+#include "TMVA/Factory.h"
+#include "TMVA/Tools.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,9 +19,12 @@ int main(int argc, char *argv[])
     ("help,h","Print help message")
     ("final-state-tree,f","flag to make final state tree, requires data-dir, out-file, and 1 of the n-leptons flags")
     ("var-tree,v","flag to make variable tree, requires in-file, out-file")
+    ("mva,m","flag to run the mva, requires out-file, signal, blackgrounds")
     ("data-dir,d",boost::program_options::value<std::string>(),"Directory containing ROOT files (required)")
     ("out-file,o",boost::program_options::value<std::string>(),"Output ROOT file name (required)")
     ("in-file,i", boost::program_options::value<std::string>(),"Input ROOT file name (required for var-tree)")
+    ("signal,s",boost::program_options::value<std::string>(),"signal file")
+    ("backgrounds,b", boost::program_options::value< std::vector<std::string> >()->multitoken(), "background trees")
     ("ssdilepton","flag for same sign dilepton events")
     ("osdilepton","flag for opposite sign dilepton events")
     ("trilepton", "flag for trilepton events")
@@ -61,7 +72,74 @@ int main(int argc, char *argv[])
     vf.Loop(vm["out-file"].as<std::string>().c_str());
     return 0;
     
-  }
+  } // else if  var-tree
+
+  else if ( vm.count("mva") ) {
+
+    if ( !vm.count("out-file") || !vm.count("signal") || !vm.count("backgrounds") ) {
+      std::cout << desc << std::endl;
+      return 0;
+    }
+    
+    // setup the sig, bkg manager
+    mAIDA::MVASigBkg sb_set;
+    sb_set.set_sig(vm["signal"].as<std::string>(),
+		   vm["signal"].as<std::string>().c_str(),
+		   "mvavartree",1.0);
+
+    // add all the backgrounds from command line arg.
+    for ( auto const& ibkg : vm["backgrounds"].as< std::vector<std::string> >() )
+      sb_set.add_bkg(ibkg,ibkg.c_str(),"mvavartree",1.0);
+
+    TFile *TMVAFile        = new TFile(vm["out-file"].as<std::string>().c_str(),"RECREATE");
+    TMVA::Factory *factory = new TMVA::Factory("TMVAClassification",TMVAFile,
+					       "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification");
+
+    // make a map which holds the variable name as key, and a mair which is the units and variable type
+    // example: name = "ht", units would be "MeV", type would be float, so 'F'
+    // map is filled from var list file of that form in that order
+    std::map<TString, std::pair<TString,char> > varsUsed;
+    std::ifstream infile;
+    std::string   temp_var, temp_units;
+    char          temp_type;
+    infile.open("config/mvalist.txt");
+    // fill the map with the contents on the confit file
+    while ( infile >> temp_var >> temp_units >> temp_type ) {
+      std::cout << temp_var << " " << temp_type << " " << temp_units << " " << temp_type << std::endl;
+      TString ttemp_var   = temp_var;
+      TString ttemp_units = temp_units;
+      varsUsed[ttemp_var] = std::make_pair(ttemp_units,temp_type);
+    }
+    infile.close();
+    
+    // now loop through the map to add variables to the factory
+    for ( auto const& varitr : varsUsed ) {
+      std::cout << varitr.first << " " << varitr.first << " " << varitr.second.first << " " << varitr.second.second << std::endl;
+      factory->AddVariable(varitr.first,varitr.first,varitr.second.first,varitr.second.second);
+    }
+  
+    // add the signal from the signal background manager set to the factory
+    factory->AddSignalTree(sb_set.sig_tree(),sb_set.sig_weight());
+    // use the signal background manager function to add the backgrounds to the factorhy
+    sb_set.add_bkg_to_factory(factory);
+
+    // cuts on sig/bkg variables
+    TCut sig_cut = "";
+    TCut bkg_cut = "";
+
+    // now we prepare, book, train, test, and evaluate
+    factory->PrepareTrainingAndTestTree(sig_cut,bkg_cut,
+					"nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");  
+  
+    factory->BookMethod(TMVA::Types::kBDT,"BDT",
+			"!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20");
+
+    factory->TrainAllMethods();
+    factory->TestAllMethods();
+    factory->EvaluateAllMethods();
+
+    
+  } // else if mva
   
   else {
     std::cout << desc << std::endl;
