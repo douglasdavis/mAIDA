@@ -1,5 +1,6 @@
 ll_pt	MeV	F
 njets	arb	I
+njets_b arb	I
 MET	MeV	F
 ht	MeV	F
 sj_eta	arb	F

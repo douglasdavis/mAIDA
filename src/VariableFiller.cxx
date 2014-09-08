@@ -75,8 +75,8 @@ namespace mAIDA {
 
       // loop through all leptons for ll determination and add to ht variable
       for ( auto lep : fs->Leptons() ) {
+	ht += lep.pt();
 	if ( lep.pt() > current_max ) {
-	  ht += lep.pt();
 	  current_max = lep.pt();
 	  ll = lep;
 	}
@@ -110,8 +110,11 @@ namespace mAIDA {
       // loop through all jets for lj determination and add to ht variable
       current_max = -9e10;
       for ( auto jet : fs->Jets() ) {
+	ht += jet.pt();
+	if ( jet.MV1() > 0.7892 ) {
+	  njets_b++;
+	}
 	if ( jet.pt() > current_max ) {
-	  ht += jet.pt();
 	  current_max = jet.pt();
 	  lj = jet;
 	}
