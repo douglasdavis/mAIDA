@@ -41,7 +41,22 @@ namespace mAIDA {
     }
     return false;
   }
-
+  
+  inline float get_dR(const float phi1, const float phi2,const float eta1, const float eta2)
+  {
+    return std::sqrt(std::pow(fabs(fabs(fabs(phi1-phi2)-3.14159)-3.14159),2)+std::pow(eta1-eta2,2));
+  }
+  
+  inline float get_dPhi(const float phi1, const float phi2)
+  {
+    return fabs(fabs(fabs(phi1-phi2)-3.14159)-3.14159);
+  }
+  
+  inline float get_dEta(const float eta1, const float eta2)
+  {
+    return (eta1 - eta2);
+  }
+  
   enum pdg_codes {
 
     k_d    = 1,

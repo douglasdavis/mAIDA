@@ -1,18 +1,24 @@
 /** @file VariableFiller.cxx
  *  @brief mAIDA::VariableFiller class implementation
  *
+ *  This file really only contains the source for the Loop function
+ *  which just fills the variable tree for MVA use
+ *  Therefore I break the function into sections cause it's pretty dense
+ *  Just remember its one function with a lot going on for determining
+ *  different variables
+ *
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
 #include "VariableFiller.h"
 #include "FinalState.h"
+#include "Utils.h"
 #include <iostream>
 
 namespace mAIDA {
 
   void VariableFiller::Loop(const char* fname)
   {
-    
     TFile *ofile      = new TFile(fname,"RECREATE");
     TTree *mvavartree = new TTree("mvavartree","mvavartree");
 
@@ -31,6 +37,12 @@ namespace mAIDA {
     float lj_eta;
     float sj_eta;
 
+    float dR_ll_sl;
+    float dR_lj_sj;
+
+    float dR_avg_l;
+    float dR_avg_j;
+    
     mvavartree->Branch("ht",     &ht,     "ht/F");
     mvavartree->Branch("MET",    &MET,    "MET/F");
     mvavartree->Branch("njets",  &njets,  "njets/I");
@@ -46,14 +58,22 @@ namespace mAIDA {
     mvavartree->Branch("lj_eta",&lj_eta,"lj_eta/F");
     mvavartree->Branch("sj_eta",&sj_eta,"sj_eta/F");
 
+    mvavartree->Branch("dR_ll_sl",&dR_ll_sl,"dR_ll_sl/F");
+    mvavartree->Branch("dR_lj_sj",&dR_lj_sj,"dR_lj_sj/F");
+
+    mvavartree->Branch("dR_avg_l",&dR_avg_l,"dR_avg_l/F");
+    mvavartree->Branch("dR_avg_j",&dR_avg_j,"dR_avg_j/F");
+    
     mAIDA::FinalState *fs = new mAIDA::FinalState();
     _in_tree->SetBranchAddress("FinalState",&fs);
 
+    // ________________________________________________________________________________
+    
     // loop over each final state
-    for ( auto ifs = 0; ifs < _in_tree->GetEntries(); ++ifs ) {
-      
+    for ( auto ifs = 0; ifs < _in_tree->GetEntries(); ++ifs ) {      
       _in_tree->GetEntry(ifs);
 
+      // first we get some easily definable variables
       // directly readable vars
       MET     = fs->MET();
       njets   = fs->Jets().size();
@@ -63,6 +83,8 @@ namespace mAIDA {
       njets_b = 0;
       ht      = 0;
 
+      //________________________________________________________________________________
+      
       // declare particles to be used for
       // tree entries
       mAIDA::Lepton ll; // leading lepton
@@ -108,6 +130,7 @@ namespace mAIDA {
       }
 	
       // loop through all jets for lj determination and add to ht variable
+      // and start summing njets_b
       current_max = -9e10;
       for ( auto jet : fs->Jets() ) {
 	ht += jet.pt();
@@ -144,6 +167,48 @@ namespace mAIDA {
       lj_eta = lj.eta();
       sj_eta = sj.eta();
 
+      dR_ll_sl = mAIDA::get_dR(ll.phi(),sl.phi(),ll.eta(),sl.eta());
+      dR_lj_sj = mAIDA::get_dR(lj.phi(),sj.phi(),lj.eta(),sj.eta());
+
+      //________________________________________________________________________________
+      
+      // determine dR_avg_l
+      float dr01,dr02,dr03,dr12,dr13,dr23;
+      switch ( fs->Leptons().size() ) {
+      case 2:
+	dR_avg_l = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(1).phi(),
+				 fs->Leptons().at(0).eta(),fs->Leptons().at(1).eta());
+	break;
+      case 3:
+	dr01 = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(1).phi(),
+			     fs->Leptons().at(0).eta(),fs->Leptons().at(1).eta());
+	dr02 = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(2).phi(),
+			     fs->Leptons().at(0).eta(),fs->Leptons().at(2).eta());
+	dr12 = mAIDA::get_dR(fs->Leptons().at(1).phi(),fs->Leptons().at(2).phi(),
+			     fs->Leptons().at(1).eta(),fs->Leptons().at(2).eta());
+	dR_avg_l = (dr01+dr02+dr12)/3.0;
+	break;
+      case 4:
+	dr01 = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(1).phi(),
+			     fs->Leptons().at(0).eta(),fs->Leptons().at(1).eta());
+	dr02 = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(2).phi(),
+			     fs->Leptons().at(0).eta(),fs->Leptons().at(2).eta());
+	dr03 = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(3).phi(),
+			     fs->Leptons().at(0).eta(),fs->Leptons().at(3).eta());
+	dr12 = mAIDA::get_dR(fs->Leptons().at(1).phi(),fs->Leptons().at(2).phi(),
+			     fs->Leptons().at(1).eta(),fs->Leptons().at(2).eta());
+	dr13 = mAIDA::get_dR(fs->Leptons().at(1).phi(),fs->Leptons().at(3).phi(),
+			     fs->Leptons().at(1).eta(),fs->Leptons().at(3).eta());
+	dr23 = mAIDA::get_dR(fs->Leptons().at(2).phi(),fs->Leptons().at(3).phi(),
+			     fs->Leptons().at(2).eta(),fs->Leptons().at(3).eta());
+	dR_avg_l = (dr01+dr02+dr03+dr12+dr13+dr23)/6.0;
+	break;
+      default:
+	std::cout << "bad number of leptons!" << std::endl;
+	return;
+	break;
+      }
+      
       mvavartree->Fill();
       
     }
