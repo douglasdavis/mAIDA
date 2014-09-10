@@ -111,21 +111,29 @@ int main(int argc, char *argv[])
       varsUsed[ttemp_var] = std::make_pair(ttemp_units,temp_type);
     }
     infile.close();
-    
+
     // now loop through the map to add variables to the factory
     for ( auto const& varitr : varsUsed ) {
       std::cout << varitr.first << " " << varitr.first << " " << varitr.second.first << " " << varitr.second.second << std::endl;
       factory->AddVariable(varitr.first,varitr.first,varitr.second.first,varitr.second.second);
     }
-  
+
+    // this bit sets of the cuts from the cut config file
+    std::string sc1, sc2;
+    std::map<std::string,std::string> cuts;
+    infile.open("config/mvacuts.txt");
+    while ( infile >> sc1 >> sc2 )
+      cuts[sc1] = sc2;
+    std::cout << "Cuts: " << std::endl;
+    for ( auto itr : cuts )
+      std::cout << itr.first << " " << itr.second << std::endl;
+    TCut sig_cut(cuts.at("sig").c_str());
+    TCut bkg_cut(cuts.at("bkg").c_str());
+    
     // add the signal from the signal background manager set to the factory
     factory->AddSignalTree(sb_set.sig_tree(),sb_set.sig_weight());
     // use the signal background manager function to add the backgrounds to the factorhy
     sb_set.add_bkg_to_factory(factory);
-
-    // cuts on sig/bkg variables
-    TCut sig_cut = "";
-    TCut bkg_cut = "";
 
     // now we prepare, book, train, test, and evaluate
     factory->PrepareTrainingAndTestTree(sig_cut,bkg_cut,

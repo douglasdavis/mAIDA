@@ -1,0 +1,2 @@
+sig	njets>0
+bkg	njets>0
