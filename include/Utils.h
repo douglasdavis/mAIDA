@@ -59,22 +59,10 @@ namespace mAIDA {
   
   enum pdg_codes {
 
-    k_d    = 1,
-    k_u    = 2,
-    k_s    = 3,
-    k_c    = 4,
-    k_b    = 5,
-    k_t    = 6,
-    k_el   = 11,
-    k_mu   = 13,
-    k_ta   = 15,
-    k_nue  = 12,
-    k_numu = 14,
-    k_nuta = 16,
-    k_glu  = 21,
-    k_gam  = 22,
-    k_Z    = 23,
-    k_W    = 24
+    k_d    = 1,  k_u    = 2,  k_s    = 3,  k_c    = 4,
+    k_b    = 5,  k_t    = 6,  k_el   = 11, k_mu   = 13,
+    k_ta   = 15, k_nue  = 12, k_numu = 14, k_nuta = 16,
+    k_glu  = 21, k_gam  = 22, k_Z    = 23, k_W    = 24
 
   };
 

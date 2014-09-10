@@ -14,6 +14,7 @@
 #include "FinalState.h"
 #include "Utils.h"
 #include <iostream>
+#include <algorithm>
 
 namespace mAIDA {
 
@@ -172,8 +173,9 @@ namespace mAIDA {
 
       //________________________________________________________________________________
       
-      // determine dR_avg_l
-      float dr01,dr02,dr03,dr12,dr13,dr23;
+      // determine dR_avg_l using the
+      // size of the lepton vector
+      float dr01, dr02, dr03, dr12, dr13, dr23;
       switch ( fs->Leptons().size() ) {
       case 2:
 	dR_avg_l = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(1).phi(),
@@ -208,14 +210,56 @@ namespace mAIDA {
 	return;
 	break;
       }
+
+      if ( fs->Jets().size() == 0 ) {
+	dR_avg_j = -999;
+      }
+      if ( fs->Jets().size() == 1 ) {
+	dR_avg_j = 0;
+      }
+      if ( fs->Jets().size() == 2 ) {
+	dR_avg_j = mAIDA::get_dR(fs->Jets().at(0).phi(),fs->Jets().at(1).phi(),
+				 fs->Jets().at(0).eta(),fs->Jets().at(1).eta());
+      }
+      if ( fs->Jets().size() == 3 ) {
+	dr01 = mAIDA::get_dR(fs->Jets().at(0).phi(),fs->Jets().at(1).phi(),
+			     fs->Jets().at(0).eta(),fs->Jets().at(1).eta());
+	dr02 = mAIDA::get_dR(fs->Jets().at(0).phi(),fs->Jets().at(2).phi(),
+			     fs->Jets().at(0).eta(),fs->Jets().at(2).eta());
+	dr12 = mAIDA::get_dR(fs->Jets().at(1).phi(),fs->Jets().at(2).phi(),
+			     fs->Jets().at(1).eta(),fs->Jets().at(2).eta());
+	dR_avg_j = (dr01+dr02+dr12)/3.0;
+      }
+      if ( fs->Jets().size() > 3 ) {
+	std::vector<float> jet_dRs;
+	for ( auto const j1 : fs->Jets() ) {
+	  for ( auto const j2 : fs->Jets() ) {
+	    if ( j1.eta() != j2.eta() ) {
+	      if ( std::find(jet_dRs.begin(),jet_dRs.end(),
+			     mAIDA::get_dR(j1.phi(),j2.phi(),j1.eta(),j2.eta())) != jet_dRs.end() ) {
+		continue;
+	      } // if the current dR is in the vector
+	      else {
+		jet_dRs.push_back(mAIDA::get_dR(j1.phi(),j2.phi(),j1.eta(),j2.eta()));
+	      } // if the current dR is not in the vector
+	    } // if j1.eta != j2.eta (trying to avoid uneeded compute time
+	  } // loop over jets again
+	} // loop over jets
+
+	// now do the average dR for jets when Njets > 3
+	float temp_sum = 0;
+	for ( auto const dritr : jet_dRs )
+	  temp_sum += dritr;
+	dR_avg_j = temp_sum/(float)jet_dRs.size();
+      }
       
       mvavartree->Fill();
       
     }
-
+    
     mvavartree->Write();
     ofile->Close();
-
+    
   }
   
 }
