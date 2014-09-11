@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     }
     
     mAIDA::FinalStateFiller fsf(vm["out-file"].as<std::string>().c_str(),"finalstates");
-    std::string files = vm["data-dir"].as<std::string>() + "/*.root";
+    std::string files = vm["data-dir"].as<std::string>() + "/*.root*";
     fsf.AddFile(files.c_str());
 
     if ( vm.count("trilepton")  ) fsf.Make_trilepton();
