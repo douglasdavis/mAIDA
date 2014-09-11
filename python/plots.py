@@ -37,9 +37,11 @@ BackgroundVarsOutput = []
 for var in var_list:
     SignalVarsOutput.append(infile.Get(prefix+var+'__Signal'))
     BackgroundVarsOutput.append(infile.Get(prefix+var+'__Background'))
+
 for hist in SignalVarsOutput:
     hist.SetTitle(';'+hist.GetTitle()+';Normalized')
     pystyle.hstyle(hist,sfill,sfillc)
+
 for hist in BackgroundVarsOutput:
     hist.SetTitle(';'+hist.GetTitle()+';Normalized')
     pystyle.hstyle(hist,bfill,bfillc)
@@ -51,6 +53,7 @@ BackgroundOutput.Draw('hist,same')
 cs = [ROOT.TCanvas('c_'+name,'c_'+name) for name in var_list]
 for i in xrange(len(cs)):
     cs[i].cd()
+    pystyle.normalize_hists(SignalVarsOutput[i],BackgroundVarsOutput[i])
     SignalVarsOutput[i].Draw('hist')
     BackgroundVarsOutput[i].Draw('hist,same')
 

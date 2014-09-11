@@ -1,6 +1,19 @@
 import ROOT
 from ROOT import gStyle
 
+def normalize_hists(sig,bkg):
+    if sig.GetSumw2N() == 0:
+        sig.Sumw2()
+    if bkg.GetSumw2N() == 0:
+        bkg.Sumw2()
+
+    if sig.GetSumOfWeights() != 0:
+        dx = (sig.GetXaxis().GetXmax() - sig.GetXaxis().GetXmin())/sig.GetNbinsX()
+        sig.Scale(1.0/sig.GetSumOfWeights()/dx)
+    if bkg.GetSumOfWeights() != 0:
+        dx = (bkg.GetXaxis().GetXmax() - bkg.GetXaxis().GetXmin())/bkg.GetNbinsX()
+        bkg.Scale(1.0/bkg.GetSumOfWeights()/dx)
+
 def gstyle():
     ROOT.gROOT.ProcessLine('TGaxis::SetMaxDigits(3);')    
     gStyle.SetFrameBorderMode(0)
