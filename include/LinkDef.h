@@ -10,7 +10,7 @@
 #pragma link C++ class std::vector<mAIDA::Jet>+;
 #pragma link C++ class std::vector<mAIDA::Lepton>+;
 #pragma link C++ class mAIDA::FinalState+;
-#pragma link C++ class mAIDA::FinalStateFiller+;
+#pragma link C++ class mAIDA::Swizzler+;
 #pragma link C++ class mAIDA::VariableFiller+;
 #pragma link C++ class mAIDA::MVASigBkg+;
 

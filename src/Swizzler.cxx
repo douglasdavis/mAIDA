@@ -1,23 +1,23 @@
-/** @file FinalStateFiller.cxx
- *  @brief mAIDA::FinalStateFiller class implementation
+/** @file Swizzler.cxx
+ *  @brief mAIDA::Swizzler class implementation
  *
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#include "FinalStateFiller.h"
+#include "Swizzler.h"
 #include "Utils.h"
 #include <iostream>
 
-mAIDA::FinalStateFiller::FinalStateFiller(const char *fname, const char* tname)
+mAIDA::Swizzler::Swizzler(const char *fname, const char* tname)
 {
   fRealChain = new TChain("physics");
   _out_file = new TFile(fname,"RECREATE");
   _out_tree = new TTree(tname,tname);
 }
 
-mAIDA::FinalStateFiller::~FinalStateFiller() {}
+mAIDA::Swizzler::~Swizzler() {}
 
-void mAIDA::FinalStateFiller::Loop()
+void mAIDA::Swizzler::Loop()
 {
   InitRealChain();
   if ( fRealChain == 0 ) return;

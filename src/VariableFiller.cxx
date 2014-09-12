@@ -24,6 +24,7 @@ namespace mAIDA {
 
     float MET;
     float ht;
+    float ht_jets;
     int   njets;
     int   njets_b;
 
@@ -42,9 +43,13 @@ namespace mAIDA {
 
     float dR_avg_l;
     float dR_avg_j;
+
+    float m_leptons;
+    float m_jets;
     
-    mvavartree->Branch("ht",     &ht,     "ht/F");
     mvavartree->Branch("MET",    &MET,    "MET/F");
+    mvavartree->Branch("ht",     &ht,     "ht/F");
+    mvavartree->Branch("ht_jets",&ht_jets,"ht_jets/F");
     mvavartree->Branch("njets",  &njets,  "njets/I");
     mvavartree->Branch("njets_b",&njets_b,"njets_b/I");
 
@@ -63,6 +68,9 @@ namespace mAIDA {
 
     mvavartree->Branch("dR_avg_l",&dR_avg_l,"dR_avg_l/F");
     mvavartree->Branch("dR_avg_j",&dR_avg_j,"dR_avg_j/F");
+
+    mvavartree->Branch("m_leptons",&m_leptons,"m_leptons/F");
+    mvavartree->Branch("m_jets",   &m_jets,   "m_jets/F");
     
     mAIDA::FinalState *fs = new mAIDA::FinalState();
     _in_tree->SetBranchAddress("FinalState",&fs);
@@ -128,7 +136,8 @@ namespace mAIDA {
       // and start summing njets_b
       current_max = -9e10;
       for ( auto jet : fs->Jets() ) {
-	ht += jet.pt();
+	ht      += jet.pt();
+	ht_jets += jet.pt();
 	if ( jet.MV1() > 0.7892 ) {
 	  njets_b++;
 	}
@@ -235,6 +244,16 @@ namespace mAIDA {
 	  temp_sum += dritr;
 	dR_avg_j = temp_sum/(float)jet_dRs.size();
       }
+
+      // loops to calculate invariant mass of leptons and jets
+      TLorentzVector all_leptons_4v;
+      TLorentzVector all_jets_4v;
+      for ( auto const lep : fs->Leptons() )
+	all_leptons_4v += lep.four_vector();
+      for ( auto const jet : fs->Jets() )
+	all_jets_4v += jet.four_vector();
+      m_leptons = all_leptons_4v.M();
+      m_jets    = all_jets_4v.M();
       
       mvavartree->Fill();
       

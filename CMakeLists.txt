@@ -33,7 +33,7 @@ ROOT_GENERATE_DICTIONARY(
   include/Jet.h
   include/Lepton.h
   include/FinalState.h
-  include/FinalStateFiller.h
+  include/Swizzler.h
   include/VariableFiller.h
   include/MVASigBkg.h
   LINKDEF include/LinkDef.h

@@ -1,6 +1,6 @@
-/** @file FinalStateFiller.h
- *  @brief mAIDA::FinalStateFiller class header
- *  @class mAIDA::FinalStateFiller
+/** @file Swizzler.h
+ *  @brief mAIDA::Swizzler class header
+ *  @class mAIDA::Swizzler
  *  @brief a class to accumulate and store final states
  *
  *  This class uses the mAIDA::Reader class to loop
@@ -10,15 +10,15 @@
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#ifndef mAIDA_FinalStateFiller_h
-#define mAIDA_FinalStateFiller_h
+#ifndef mAIDA_Swizzler_h
+#define mAIDA_Swizzler_h
 
 #include "FinalState.h"
 #include "Reader.h"
 
 namespace mAIDA {
 
-  class FinalStateFiller : public mAIDA::Reader {
+  class Swizzler : public mAIDA::Reader {
 
   private:
 
@@ -30,12 +30,12 @@ namespace mAIDA {
     bool _osdilepton;
     bool _fourlepton;
     
-    ClassDef(FinalStateFiller,1);
+    ClassDef(Swizzler,1);
     
   public:
 
-    FinalStateFiller(const char *fname, const char *tname);
-    virtual ~FinalStateFiller();
+    Swizzler(const char *fname, const char *tname);
+    virtual ~Swizzler();
 
     void Loop();
     
@@ -48,7 +48,7 @@ namespace mAIDA {
 
 }
 
-inline void mAIDA::FinalStateFiller::Make_trilepton()
+inline void mAIDA::Swizzler::Make_trilepton()
 {
   _trilepton  = true;
   _fourlepton = false;
@@ -56,7 +56,7 @@ inline void mAIDA::FinalStateFiller::Make_trilepton()
   _ssdilepton = false;
 }
 
-inline void mAIDA::FinalStateFiller::Make_fourlepton()
+inline void mAIDA::Swizzler::Make_fourlepton()
 {
   _trilepton  = false;
   _fourlepton = true;
@@ -64,7 +64,7 @@ inline void mAIDA::FinalStateFiller::Make_fourlepton()
   _ssdilepton = false;
 }
 
-inline void mAIDA::FinalStateFiller::Make_osdilepton()
+inline void mAIDA::Swizzler::Make_osdilepton()
 {
   _trilepton  = false;
   _fourlepton = false;
@@ -72,7 +72,7 @@ inline void mAIDA::FinalStateFiller::Make_osdilepton()
   _ssdilepton = false;
 }
 
-inline void mAIDA::FinalStateFiller::Make_ssdilepton()
+inline void mAIDA::Swizzler::Make_ssdilepton()
 {
   _trilepton  = false;
   _fourlepton = false;

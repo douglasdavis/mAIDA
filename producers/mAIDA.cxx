@@ -1,5 +1,5 @@
 // mAIDA
-#include "FinalStateFiller.h"
+#include "Swizzler.h"
 #include "VariableFiller.h"
 #include "MVASigBkg.h"
 // Boost
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
   boost::program_options::options_description desc("mAIDA");
   desc.add_options()
     ("help,h","Print help message")
-    ("final-state-tree,f","flag to make final state tree, requires data-dir, out-file, and 1 of the n-leptons flags")
+    ("final-state-tree,f","flag to make final state tree (swizzle),\nrequires data-dir, out-file, and 1 of the n-leptons flags")
     ("var-tree,v","flag to make variable tree, requires in-file, out-file")
     ("mva,m","flag to run the mva, requires out-file, signal, blackgrounds")
     ("data-dir,d",boost::program_options::value<std::string>(),"Directory containing ROOT files (required for -f)")
@@ -47,16 +47,16 @@ int main(int argc, char *argv[])
       return 0;
     }
     
-    mAIDA::FinalStateFiller fsf(vm["out-file"].as<std::string>().c_str(),"finalstates");
+    mAIDA::Swizzler swizz(vm["out-file"].as<std::string>().c_str(),"finalstates");
     std::string files = vm["data-dir"].as<std::string>() + "/*.root*";
-    fsf.AddFile(files.c_str());
+    swizz.AddFile(files.c_str());
 
-    if ( vm.count("trilepton")  ) fsf.Make_trilepton();
-    if ( vm.count("fourlepton") ) fsf.Make_fourlepton();
-    if ( vm.count("ssdilepton") ) fsf.Make_ssdilepton();
-    if ( vm.count("osdilepton") ) fsf.Make_osdilepton();
+    if ( vm.count("trilepton")  ) swizz.Make_trilepton();
+    if ( vm.count("fourlepton") ) swizz.Make_fourlepton();
+    if ( vm.count("ssdilepton") ) swizz.Make_ssdilepton();
+    if ( vm.count("osdilepton") ) swizz.Make_osdilepton();
 
-    fsf.Loop();
+    swizz.Loop();
     return 0;
 
   } // if final-state-tree
