@@ -4,6 +4,7 @@
 #pragma link off all functions;
 
 #pragma link C++ class mAIDA::Reader+;
+#pragma link C++ class mAIDA::PhysicsObject+;
 #pragma link C++ class mAIDA::Jet+;
 #pragma link C++ class mAIDA::Lepton+;
 #pragma link C++ class std::vector<mAIDA::Jet>+;

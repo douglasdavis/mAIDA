@@ -35,14 +35,14 @@ void mAIDA::FinalStateFiller::Loop()
       if ( mAIDA::good_el(el_pt->at(iel),el_eta->at(iel)) ) {
 	mAIDA::Lepton el;
 	el.Set_pdgId(mAIDA::k_el);
-	el.Set_E(el_E->at(iel));
-	el.Set_pt(el_pt->at(iel));
-	el.Set_eta(el_eta->at(iel));
-	el.Set_phi(el_phi->at(iel));
 	el.Set_charge(el_charge->at(iel));
 	el.Set_px(999999);
 	el.Set_py(999999);
 	el.Set_pz(999999);
+	el.Set_PtEtaPhiE(el_pt->at(iel),
+			 el_eta->at(iel),
+			 el_phi->at(iel),
+			 el_E->at(iel));
 	FinalState.AddLepton(el);
       } // if pass pt and eta cut
     } // for all electrons
@@ -51,14 +51,14 @@ void mAIDA::FinalStateFiller::Loop()
       if ( mAIDA::good_mu(mu_pt->at(imu),mu_eta->at(imu)) ) {
 	mAIDA::Lepton mu;
 	mu.Set_pdgId(mAIDA::k_mu);
-	mu.Set_E(mu_E->at(imu));
-	mu.Set_pt(mu_pt->at(imu));
-	mu.Set_eta(mu_eta->at(imu));
-	mu.Set_phi(mu_phi->at(imu));
 	mu.Set_charge(mu_charge->at(imu));
 	mu.Set_px(mu_px->at(imu));
 	mu.Set_py(mu_py->at(imu));
 	mu.Set_pz(mu_pz->at(imu));
+	mu.Set_PtEtaPhiE(mu_pt->at(imu),
+			 mu_eta->at(imu),
+			 mu_phi->at(imu),
+			 mu_E->at(imu));
 	FinalState.AddLepton(mu);
       } // if pass pt and eta cut
     } // for all muons
@@ -66,10 +66,10 @@ void mAIDA::FinalStateFiller::Loop()
     for ( auto ijet = 0; ijet < jet_AntiKt4LCTopo_n; ++ijet ) {
       if ( mAIDA::good_jet(jet_AntiKt4LCTopo_pt->at(ijet),jet_AntiKt4LCTopo_eta->at(ijet)) ) {
 	mAIDA::Jet jet;
-	jet.Set_E(jet_AntiKt4LCTopo_E->at(ijet));
-	jet.Set_pt(jet_AntiKt4LCTopo_pt->at(ijet));
-	jet.Set_eta(jet_AntiKt4LCTopo_eta->at(ijet));
-	jet.Set_phi(jet_AntiKt4LCTopo_phi->at(ijet));
+	jet.Set_PtEtaPhiE(jet_AntiKt4LCTopo_pt->at(ijet),
+			  jet_AntiKt4LCTopo_eta->at(ijet),
+			  jet_AntiKt4LCTopo_phi->at(ijet),
+			  jet_AntiKt4LCTopo_E->at(ijet));
 	jet.Set_MV1(jet_AntiKt4LCTopo_flavor_weight_MV1->at(ijet));
 	FinalState.AddJet(jet);
       }

@@ -4,3 +4,5 @@ njets_b		arb	I
 MET		MeV	F
 ht		MeV	F
 dR_avg_l	MeV	F
+dR_ll_sl	MeV	F
+dR_lj_sj	MeV	F

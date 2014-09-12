@@ -29,6 +29,7 @@ include_directories("${CMAKE_SOURCE_DIR}/include")
 ROOT_GENERATE_DICTIONARY(
   mAIDAdict
   include/Reader.h
+  include/PhysicsObject.h
   include/Jet.h
   include/Lepton.h
   include/FinalState.h

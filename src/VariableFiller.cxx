@@ -12,7 +12,6 @@
 
 #include "VariableFiller.h"
 #include "FinalState.h"
-#include "Utils.h"
 #include <iostream>
 #include <algorithm>
 
@@ -116,18 +115,13 @@ namespace mAIDA {
 
       // if no jets set all the leading jet vars to lame shit
       if ( fs->Jets().size() == 0 ) {
-	lj.Set_pt(-99);
-	sj.Set_pt(-99);
-	lj.Set_eta(-10);
-	sj.Set_eta(-10);
+	continue;
       }
 
       // if only 1 jet set leading jet/second jet to same thing
       if ( fs->Jets().size() == 1 ) {
-	lj.Set_eta(fs->Jets().at(0).eta());
-	lj.Set_pt(fs->Jets().at(0).pt());
-	sj.Set_eta(lj.eta());
-	sj.Set_pt(lj.pt());
+	lj = fs->Jets().at(0);
+	sj = fs->Jets().at(0);
       }
 	
       // loop through all jets for lj determination and add to ht variable
@@ -168,8 +162,11 @@ namespace mAIDA {
       lj_eta = lj.eta();
       sj_eta = sj.eta();
 
-      dR_ll_sl = mAIDA::get_dR(ll.phi(),sl.phi(),ll.eta(),sl.eta());
-      dR_lj_sj = mAIDA::get_dR(lj.phi(),sj.phi(),lj.eta(),sj.eta());
+      dR_ll_sl = ll.four_vector().DeltaR(sl.four_vector());
+      dR_lj_sj = ll.four_vector().DeltaR(sj.four_vector());
+      
+      //      dR_ll_sl = mAIDA::get_dR(ll.phi(),sl.phi(),ll.eta(),sl.eta());
+      //      dR_lj_sj = mAIDA::get_dR(lj.phi(),sj.phi(),lj.eta(),sj.eta());
 
       //________________________________________________________________________________
       
@@ -178,31 +175,21 @@ namespace mAIDA {
       float dr01, dr02, dr03, dr12, dr13, dr23;
       switch ( fs->Leptons().size() ) {
       case 2:
-	dR_avg_l = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(1).phi(),
-				 fs->Leptons().at(0).eta(),fs->Leptons().at(1).eta());
+	dR_avg_l = fs->Leptons().at(0).four_vector().DeltaR(fs->Leptons().at(1).four_vector());
 	break;
       case 3:
-	dr01 = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(1).phi(),
-			     fs->Leptons().at(0).eta(),fs->Leptons().at(1).eta());
-	dr02 = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(2).phi(),
-			     fs->Leptons().at(0).eta(),fs->Leptons().at(2).eta());
-	dr12 = mAIDA::get_dR(fs->Leptons().at(1).phi(),fs->Leptons().at(2).phi(),
-			     fs->Leptons().at(1).eta(),fs->Leptons().at(2).eta());
+	dr01 = fs->Leptons().at(0).four_vector().DeltaR(fs->Leptons().at(1).four_vector());
+	dr02 = fs->Leptons().at(0).four_vector().DeltaR(fs->Leptons().at(2).four_vector());
+	dr12 = fs->Leptons().at(1).four_vector().DeltaR(fs->Leptons().at(2).four_vector());
 	dR_avg_l = (dr01+dr02+dr12)/3.0;
 	break;
       case 4:
-	dr01 = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(1).phi(),
-			     fs->Leptons().at(0).eta(),fs->Leptons().at(1).eta());
-	dr02 = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(2).phi(),
-			     fs->Leptons().at(0).eta(),fs->Leptons().at(2).eta());
-	dr03 = mAIDA::get_dR(fs->Leptons().at(0).phi(),fs->Leptons().at(3).phi(),
-			     fs->Leptons().at(0).eta(),fs->Leptons().at(3).eta());
-	dr12 = mAIDA::get_dR(fs->Leptons().at(1).phi(),fs->Leptons().at(2).phi(),
-			     fs->Leptons().at(1).eta(),fs->Leptons().at(2).eta());
-	dr13 = mAIDA::get_dR(fs->Leptons().at(1).phi(),fs->Leptons().at(3).phi(),
-			     fs->Leptons().at(1).eta(),fs->Leptons().at(3).eta());
-	dr23 = mAIDA::get_dR(fs->Leptons().at(2).phi(),fs->Leptons().at(3).phi(),
-			     fs->Leptons().at(2).eta(),fs->Leptons().at(3).eta());
+	dr01 = fs->Leptons().at(0).four_vector().DeltaR(fs->Leptons().at(1).four_vector());
+	dr02 = fs->Leptons().at(0).four_vector().DeltaR(fs->Leptons().at(2).four_vector());
+	dr03 = fs->Leptons().at(0).four_vector().DeltaR(fs->Leptons().at(3).four_vector());
+	dr12 = fs->Leptons().at(1).four_vector().DeltaR(fs->Leptons().at(2).four_vector());
+	dr13 = fs->Leptons().at(1).four_vector().DeltaR(fs->Leptons().at(3).four_vector());
+	dr23 = fs->Leptons().at(2).four_vector().DeltaR(fs->Leptons().at(3).four_vector());
 	dR_avg_l = (dr01+dr02+dr03+dr12+dr13+dr23)/6.0;
 	break;
       default:
@@ -218,16 +205,12 @@ namespace mAIDA {
 	dR_avg_j = 0;
       }
       if ( fs->Jets().size() == 2 ) {
-	dR_avg_j = mAIDA::get_dR(fs->Jets().at(0).phi(),fs->Jets().at(1).phi(),
-				 fs->Jets().at(0).eta(),fs->Jets().at(1).eta());
+	dR_avg_j = fs->Jets().at(0).four_vector().DeltaR(fs->Jets().at(1).four_vector());
       }
       if ( fs->Jets().size() == 3 ) {
-	dr01 = mAIDA::get_dR(fs->Jets().at(0).phi(),fs->Jets().at(1).phi(),
-			     fs->Jets().at(0).eta(),fs->Jets().at(1).eta());
-	dr02 = mAIDA::get_dR(fs->Jets().at(0).phi(),fs->Jets().at(2).phi(),
-			     fs->Jets().at(0).eta(),fs->Jets().at(2).eta());
-	dr12 = mAIDA::get_dR(fs->Jets().at(1).phi(),fs->Jets().at(2).phi(),
-			     fs->Jets().at(1).eta(),fs->Jets().at(2).eta());
+	dr01 = fs->Jets().at(0).four_vector().DeltaR(fs->Jets().at(1).four_vector());
+	dr02 = fs->Jets().at(0).four_vector().DeltaR(fs->Jets().at(2).four_vector());
+	dr12 = fs->Jets().at(1).four_vector().DeltaR(fs->Jets().at(2).four_vector());
 	dR_avg_j = (dr01+dr02+dr12)/3.0;
       }
       if ( fs->Jets().size() > 3 ) {
@@ -236,11 +219,11 @@ namespace mAIDA {
 	  for ( auto const j2 : fs->Jets() ) {
 	    if ( j1.eta() != j2.eta() ) {
 	      if ( std::find(jet_dRs.begin(),jet_dRs.end(),
-			     mAIDA::get_dR(j1.phi(),j2.phi(),j1.eta(),j2.eta())) != jet_dRs.end() ) {
+			     j1.four_vector().DeltaR(j2.four_vector())) != jet_dRs.end() ) {
 		continue;
 	      } // if the current dR is in the vector
 	      else {
-		jet_dRs.push_back(mAIDA::get_dR(j1.phi(),j2.phi(),j1.eta(),j2.eta()));
+		jet_dRs.push_back(j1.four_vector().DeltaR(j2.four_vector()));
 	      } // if the current dR is not in the vector
 	    } // if j1.eta != j2.eta (trying to avoid uneeded compute time
 	  } // loop over jets again
