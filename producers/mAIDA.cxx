@@ -14,39 +14,44 @@
 
 int main(int argc, char *argv[])
 {
+  // first we set up the how to handle the CL arguments
+  // (google boost program options for info on this library)
   boost::program_options::options_description desc("mAIDA");
   desc.add_options()
-    ("help,h","Print help message")
-    ("final-state-tree,f","flag to make final state tree (swizzle),\nrequires data-dir, out-file, and 1 of the n-leptons flags")
-    ("var-tree,v","flag to make variable tree, requires in-file, out-file")
-    ("mva,m","flag to run the mva, requires out-file, signal, blackgrounds")
-    ("data-dir,d",boost::program_options::value<std::string>(),"Directory containing ROOT files (required for -f)")
-    ("out-file,o",boost::program_options::value<std::string>(),"Output ROOT file name (always required)")
-    ("in-file,i", boost::program_options::value<std::string>(),"Input ROOT file name (required for var-tree)")
-    ("signal,s",boost::program_options::value<std::string>(),"signal ROOT file required for mva")
-    ("backgrounds,b", boost::program_options::value< std::vector<std::string> >()->multitoken(), "background ROOT files required for mva")
-    ("ssdilepton","flag for same sign dilepton events")
-    ("osdilepton","flag for opposite sign dilepton events")
-    ("trilepton", "flag for trilepton events")
-    ("fourlepton","flag for fourlepton events");
-  
+    ("help,h",             "Print help message")
+    ("final-state-tree,f","flag to make final state tree (swizzle),\nrequires data-dir, out-file, and 1 of the n-leptons flags (see below)")
+    ("var-tree,v",         "flag to make variable tree, requires in-file, out-file")
+    ("mva,m",              "flag to run the mva, requires out-file, signal, blackgrounds, and a method (see below)")
+    ("data-dir,d",         boost::program_options::value<std::string>(),"Directory containing ROOT files (required for -f)")
+    ("out-file,o",         boost::program_options::value<std::string>(),"Output ROOT file name (always required)")
+    ("in-file,i",          boost::program_options::value<std::string>(),"Input ROOT file name (required for var-tree)")
+    ("signal,s",           boost::program_options::value<std::string>(),"signal ROOT file required for mva")
+    ("backgrounds,b",      boost::program_options::value< std::vector<std::string> >()->multitoken(), "background ROOT files required for mva")
+    ("ssdilepton",         "flag for same sign dilepton events")
+    ("osdilepton",         "flag for opposite sign dilepton events")
+    ("trilepton",          "flag for trilepton events")
+    ("fourlepton",         "flag for fourlepton events")
+    ("mva-method",         boost::program_options::value<std::string>(),"MVA Method to use (e.g. BDT, ANN)");
+
   boost::program_options::variables_map vm;
   boost::program_options::store(boost::program_options::parse_command_line(argc,argv,desc),vm);
   boost::program_options::notify(vm);
 
+  // if the final-state-tree flag was used
   if ( vm.count("final-state-tree") ) {
 
+    // make sure final-state-tree required input exists
     if ( !vm.count("data-dir") || !vm.count("out-file") ) {
       std::cout << desc << std::endl;
       return 0;
     }
-    
+
     if ( !vm.count("ssdilepton") && !vm.count("osdilepton") &&
 	 !vm.count("trilepton")  && !vm.count("fourlepton") ) {
       std::cout << desc << std::endl;
       return 0;
     }
-    
+
     mAIDA::Swizzler swizz(vm["out-file"].as<std::string>().c_str(),"finalstates");
     std::string files = vm["data-dir"].as<std::string>() + "/*.root*";
     swizz.AddFile(files.c_str());
@@ -61,8 +66,10 @@ int main(int argc, char *argv[])
 
   } // if final-state-tree
 
+  // if the var-tree flag was used
   else if ( vm.count("var-tree") ) {
 
+    // make sure var-tree required input exists 
     if ( !vm.count("out-file") || !vm.count("in-file") ) {
       std::cout << desc << std::endl;
       return 0;
@@ -71,16 +78,18 @@ int main(int argc, char *argv[])
     mAIDA::VariableFiller vf(vm["in-file"].as<std::string>().c_str());
     vf.Loop(vm["out-file"].as<std::string>().c_str());
     return 0;
-    
+
   } // else if  var-tree
 
+  // if the mva flag was used
   else if ( vm.count("mva") ) {
 
-    if ( !vm.count("out-file") || !vm.count("signal") || !vm.count("backgrounds") ) {
+    // make sure mva required input exists 
+    if ( !vm.count("out-file") || !vm.count("signal") || !vm.count("backgrounds") || !vm.count("mva-method") ) {
       std::cout << desc << std::endl;
       return 0;
     }
-    
+
     // setup the sig, bkg manager
     mAIDA::MVASigBkg sb_set;
     sb_set.set_sig(vm["signal"].as<std::string>(),
@@ -129,7 +138,7 @@ int main(int argc, char *argv[])
       std::cout << itr.first << " " << itr.second << std::endl;
     TCut sig_cut(cuts.at("sig").c_str());
     TCut bkg_cut(cuts.at("bkg").c_str());
-    
+
     // add the signal from the signal background manager set to the factory
     factory->AddSignalTree(sb_set.sig_tree(),sb_set.sig_weight());
     // use the signal background manager function to add the backgrounds to the factorhy
@@ -137,21 +146,26 @@ int main(int argc, char *argv[])
 
     // now we prepare, book, train, test, and evaluate
     factory->PrepareTrainingAndTestTree(sig_cut,bkg_cut,
-					"nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");  
-  
-    factory->BookMethod(TMVA::Types::kBDT,"BDT",
-			"!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20");
+					"nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");
+
+    if ( vm["mva-method"].as<std::string>() == "BDT" ) {
+      factory->BookMethod(TMVA::Types::kBDT,"BDT",
+			  "!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20");
+    }
+    else {
+      std::cout << desc << std::endl;
+    }
 
     factory->TrainAllMethods();
     factory->TestAllMethods();
     factory->EvaluateAllMethods();
 
-    
+    return 0;
   } // else if mva
-  
+
   else {
     std::cout << desc << std::endl;
-    return 0; 
+    return 0;
   }
-  
+
 }

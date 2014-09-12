@@ -13,21 +13,26 @@
 #include <cmath>
 
 namespace mAIDA {
-
-  inline bool good_el(const float pt, const float eta)
+  
+  inline bool good_el(const int tight, const float pt, const float eta,
+		      const float Etcone20, const float ptcone30)
   {
-    if ( ( pt > 25000.0 ) &&
+    if ( ( tight > 0 ) &&
+	 ( pt > 25.0e3 ) &&
 	 ( std::fabs(eta) < 2.47 ) &&
-	 !( (std::fabs(eta) > 1.37) && (std::fabs(eta) < 1.52) ) ) {
+	 !( (std::fabs(eta) > 1.37) && (std::fabs(eta) < 1.52) ) &&
+	 ( Etcone20 < 4.0e3 ) && ( ptcone30 < 2.5e3 ) ) {
       return true;
     }
     return false;
   }
-
-  inline bool good_mu(const float pt, const float eta)
+  
+  inline bool good_mu(const float pt, const float eta,
+		      const float Etcone20, const float ptcone30)
   {
-    if ( ( pt > 20000.0 ) &&
-	 ( std::fabs(eta) < 2.5 ) ) {
+    if ( ( pt > 20.0e3 ) &&
+	 ( std::fabs(eta) < 2.5 ) &&
+	 ( Etcone20 < 4.0e3 ) && ( ptcone30 < 2.5e3 ) ) {
       return true;
     }
     return false;
@@ -35,13 +40,13 @@ namespace mAIDA {
 
   inline bool good_jet(const float pt, const float eta)
   {
-    if ( ( pt > 30000.0 ) &&
+    if ( ( pt > 30.0e3 ) &&
 	 ( std::fabs(eta) < 2.5 ) ) {
       return true;
     }
     return false;
   }
-  
+
   inline float get_dR(const float phi1, const float phi2,const float eta1, const float eta2)
   {
     return std::sqrt(std::pow(fabs(fabs(fabs(phi1-phi2)-3.14159)-3.14159),2)+std::pow(eta1-eta2,2));

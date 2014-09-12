@@ -32,7 +32,8 @@ void mAIDA::Swizzler::Loop()
     if ( eventid%1000 == 0 ) std::cout << "Event: " << eventid << std::endl;
 
     for ( auto iel = 0; iel < el_n; ++iel ) {
-      if ( mAIDA::good_el(el_pt->at(iel),el_eta->at(iel)) ) {
+      if ( mAIDA::good_el(el_tight->at(iel),el_pt->at(iel),el_eta->at(iel),
+			  el_Etcone20->at(iel),el_ptcone30->at(iel)) ) {
 	mAIDA::Lepton el;
 	el.Set_pdgId(mAIDA::k_el);
 	el.Set_charge(el_charge->at(iel));
@@ -48,7 +49,8 @@ void mAIDA::Swizzler::Loop()
     } // for all electrons
 
     for ( auto imu = 0; imu < mu_n; ++imu ) {
-      if ( mAIDA::good_mu(mu_pt->at(imu),mu_eta->at(imu)) ) {
+      if ( mAIDA::good_mu(mu_pt->at(imu),mu_eta->at(imu),
+			  mu_etcone20->at(imu),mu_ptcone30->at(imu)) ) {
 	mAIDA::Lepton mu;
 	mu.Set_pdgId(mAIDA::k_mu);
 	mu.Set_charge(mu_charge->at(imu));

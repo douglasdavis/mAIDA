@@ -4,10 +4,5 @@ multivariate AIDA
 
 Douglas Davis < drd25@phy.duke.edu >
 
-To build:
-> export TOPDIR=$PWD
-> mkdir -p $TOPDIR/build
-> cd $TOPDIR/build
-> cmake $TOPDIR
-> make
-> cd $TOPDIR
+To build and setup environment:
+$ source Setup.sh
