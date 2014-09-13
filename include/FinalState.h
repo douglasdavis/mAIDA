@@ -28,7 +28,7 @@ namespace mAIDA {
     std::vector<mAIDA::Lepton> _Leptons;
     float                      _MET;
     
-    ClassDef(FinalState,1);
+    ClassDef(FinalState,2);
     
   public:
 

@@ -23,7 +23,7 @@ namespace mAIDA {
     
     TLorentzVector _four_vector;
 
-    ClassDef(PhysicsObject,1);
+    ClassDef(PhysicsObject,2);
     
   public:
 
