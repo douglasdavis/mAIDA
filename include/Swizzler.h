@@ -30,7 +30,7 @@ namespace mAIDA {
     bool _osdilepton;
     bool _fourlepton;
     
-    ClassDef(Swizzler,1);
+    ClassDef(Swizzler,2);
     
   public:
 

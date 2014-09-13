@@ -26,7 +26,7 @@ namespace mAIDA {
     float _py;
     float _pz;
 
-    ClassDef(Lepton,1);
+    ClassDef(Lepton,3);
 
   public:
 

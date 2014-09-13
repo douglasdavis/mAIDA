@@ -23,7 +23,7 @@ namespace mAIDA {
     
     float _MV1;
 
-    ClassDef(Jet,1);
+    ClassDef(Jet,3);
     
   public:
     
