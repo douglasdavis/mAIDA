@@ -12,7 +12,12 @@ def normalize_hists(sig,bkg):
     if bkg.GetSumOfWeights() != 0:
         dx = (bkg.GetXaxis().GetXmax() - bkg.GetXaxis().GetXmin())/bkg.GetNbinsX()
         bkg.Scale(1.0/bkg.GetSumOfWeights()/dx)
+    sb = 1.1
+    ss = 1.1
+    sig.SetMaximum(ROOT.TMath.Max(sig.GetMaximum()*ss,
+                                  bkg.GetMaximum()*sb))
 
+        
 def gstyle():
     ROOT.gROOT.ProcessLine('TGaxis::SetMaxDigits(3);')    
     gStyle.SetFrameBorderMode(0)
@@ -65,10 +70,11 @@ def gstyle():
     gStyle.SetTitleOffset(1.16,'y')
     gStyle.SetTitleOffset(1.20,'x')
 
-def hstyle(hist,fill,fillc):
+def hstyle(hist,fill,fillc,linec):
     hist.SetFillStyle(fill)
-    hist.SetLineColor(fillc)
+    hist.SetLineColor(linec)
     hist.SetFillColor(fillc)
+    hist.SetLineWidth(2)
     hist.GetXaxis().SetLabelSize(0.042)
     hist.GetXaxis().SetLabelFont(42)
     hist.GetXaxis().SetTitleSize(0.048)
@@ -78,3 +84,12 @@ def hstyle(hist,fill,fillc):
     hist.GetYaxis().SetTitleSize(0.048)
     hist.GetYaxis().SetTitleFont(42)
     
+def legend(sig,bkg):
+    legend = ROOT.TLegend(.73,.80,.93,.91)
+    legend.AddEntry(sig,'Signal','f')
+    legend.AddEntry(bkg,'Background','f')
+    legend.SetTextSize(0.046)
+    legend.SetTextFont(42)
+    legend.SetBorderSize(0)
+    legend.SetFillColor(0)
+    return legend
