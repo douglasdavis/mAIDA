@@ -19,7 +19,7 @@
 
 namespace mAIDA {
 
-  class FinalState {
+  class FinalState : public TObject {
 
   private:
 
@@ -38,7 +38,7 @@ namespace mAIDA {
     void SetInteractionType(const std::string name);
     void AddLepton(const mAIDA::Lepton& lepton);
     void AddJet(const mAIDA::Jet& jet);
-    void Clear();
+    void ClearVecs();
     void Set_MET(const float i);
     
     const std::string&                InteractionType() const;
@@ -54,7 +54,7 @@ namespace mAIDA {
 inline void mAIDA::FinalState::SetInteractionType(const std::string name) { _InteractionType = name;         }
 inline void mAIDA::FinalState::AddLepton(const mAIDA::Lepton& lepton)     { _Leptons.push_back(lepton);      }
 inline void mAIDA::FinalState::AddJet(const mAIDA::Jet& jet)              { _Jets.push_back(jet);            }
-inline void mAIDA::FinalState::Clear()                                    { _Leptons.clear(); _Jets.clear(); }
+inline void mAIDA::FinalState::ClearVecs()                                { _Leptons.clear(); _Jets.clear(); }
 inline void mAIDA::FinalState::Set_MET(const float i)                     { _MET = i;                        }
 
 inline const std::string&                mAIDA::FinalState::InteractionType() const { return _InteractionType; }

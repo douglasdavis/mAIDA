@@ -32,7 +32,7 @@
 
 namespace mAIDA {
   
-  class Reader {
+  class Reader : public TObject {
 
   protected:
 

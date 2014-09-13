@@ -109,7 +109,7 @@ void mAIDA::Swizzler::Loop()
       }
     }
 
-    FinalState.Clear();
+    FinalState.ClearVecs();
     
   } // for all events
 

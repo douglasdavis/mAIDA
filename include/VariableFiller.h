@@ -18,7 +18,7 @@
 
 namespace mAIDA {
 
-  class VariableFiller {
+  class VariableFiller : public TObject {
 
   private:
 

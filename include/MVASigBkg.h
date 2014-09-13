@@ -21,7 +21,7 @@
 
 namespace mAIDA {
 
-  class MVASigBkg {
+  class MVASigBkg : public TObject {
 
   private:
 

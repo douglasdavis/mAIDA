@@ -17,7 +17,7 @@
 
 namespace mAIDA {
 
-  class PhysicsObject {
+  class PhysicsObject : public TObject {
 
   protected:
     
@@ -30,7 +30,10 @@ namespace mAIDA {
     PhysicsObject();
     virtual ~PhysicsObject();
 
-    void Set_PtEtaPhiE(const float pt, const float eta, const float phi, const float E); //!< four_vector setter
+    void Set_PtEtaPhiE(const float pt,
+		       const float eta,
+		       const float phi,
+		       const float E);         //!< four_vector setter
     
     float E()   const;                         //!< energy getter
     float pt()  const;                         //!< pt getter
@@ -43,7 +46,10 @@ namespace mAIDA {
   
 }
 
-inline void mAIDA::PhysicsObject::Set_PtEtaPhiE(const float pt, const float eta, const float phi, const float E)
+inline void mAIDA::PhysicsObject::Set_PtEtaPhiE(const float pt,
+						const float eta,
+						const float phi,
+						const float E)
 {
   _four_vector.SetPtEtaPhiE(pt,eta,phi,E);
 }
