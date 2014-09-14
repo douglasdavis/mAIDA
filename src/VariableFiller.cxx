@@ -104,7 +104,7 @@ namespace mAIDA {
       float current_max = -9999;
 
       // loop through all leptons for ll determination and add to ht variable
-      for ( auto lep : fs->Leptons() ) {
+      for ( const auto& lep : fs->Leptons() ) {
 	ht += lep.pt();
 	if ( lep.pt() > current_max ) {
 	  current_max = lep.pt();
@@ -114,7 +114,7 @@ namespace mAIDA {
 
       // loop through all leptons again to detemine second lepton
       current_max = -9e10;
-      for ( auto lep : fs->Leptons() ) {
+      for ( const auto& lep : fs->Leptons() ) {
 	if ( ( lep.pt() > current_max ) && ( lep.pt() < ll.pt() ) ) {
 	  current_max = lep.pt();
 	  sl = lep;
@@ -135,7 +135,7 @@ namespace mAIDA {
       // loop through all jets for lj determination and add to ht variable
       // and start summing njets_b
       current_max = -9e10;
-      for ( auto jet : fs->Jets() ) {
+      for ( const auto& jet : fs->Jets() ) {
 	ht      += jet.pt();
 	ht_jets += jet.pt();
 	if ( jet.MV1() > 0.7892 ) {
@@ -149,7 +149,7 @@ namespace mAIDA {
 
       // loop through all jets again to determine second jet
       current_max = -9e10;
-      for ( auto jet : fs->Jets() ) {
+      for ( const auto& jet : fs->Jets() ) {
 	if ( ( jet.pt() > current_max ) && ( jet.pt() < lj.pt() ) ) {
 	  current_max = jet.pt();
 	  sj = jet;
@@ -224,8 +224,8 @@ namespace mAIDA {
       }
       if ( fs->Jets().size() > 3 ) {
 	std::vector<float> jet_dRs;
-	for ( auto const j1 : fs->Jets() ) {
-	  for ( auto const j2 : fs->Jets() ) {
+	for ( const auto& j1 : fs->Jets() ) {
+	  for ( const auto& j2 : fs->Jets() ) {
 	    if ( j1.eta() != j2.eta() ) {
 	      if ( std::find(jet_dRs.begin(),jet_dRs.end(),
 			     j1.four_vector().DeltaR(j2.four_vector())) != jet_dRs.end() ) {
@@ -240,7 +240,7 @@ namespace mAIDA {
 
 	// now do the average dR for jets when Njets > 3
 	float temp_sum = 0;
-	for ( auto const dritr : jet_dRs )
+	for ( const auto& dritr : jet_dRs )
 	  temp_sum += dritr;
 	dR_avg_j = temp_sum/(float)jet_dRs.size();
       }
@@ -248,9 +248,9 @@ namespace mAIDA {
       // loops to calculate invariant mass of leptons and jets
       TLorentzVector all_leptons_4v;
       TLorentzVector all_jets_4v;
-      for ( auto const lep : fs->Leptons() )
+      for ( const auto& lep : fs->Leptons() )
 	all_leptons_4v += lep.four_vector();
-      for ( auto const jet : fs->Jets() )
+      for ( const auto& jet : fs->Jets() )
 	all_jets_4v += jet.four_vector();
       m_leptons = all_leptons_4v.M();
       m_jets    = all_jets_4v.M();

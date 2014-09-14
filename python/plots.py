@@ -21,12 +21,18 @@ infile = ROOT.TFile(args['in_file'])
 method = args['method']
 prefix = 'Method_'+method+'/'+method+'/'
 
-sfill = 1001
-bfill = 3354
+sfill  = 1001
+bfill  = 3354
 sfillc = ROOT.TColor.GetColor('#7d99d1')
 bfillc = ROOT.TColor.GetColor('#ff0000')
 slinec = ROOT.TColor.GetColor('#0000ee')
 blinec = ROOT.TColor.GetColor('#ff0000')
+
+SignalTrain      = infile.Get(prefix+'MVA_'+method+'_Train_S')
+BackgroundTrain  = infile.Get(prefix+'MVA_'+method+'_Train_B')
+pystyle.normalize_hists(SignalTrain,BackgroundTrain)
+pystyle.hstyle(SignalTrain,sfill,sfillc,slinec)
+pystyle.hstyle(BackgroundTrain,bfill,bfillc,blinec)
 
 SignalOutput     = infile.Get(prefix+'MVA_'+method+'_S')
 BackgroundOutput = infile.Get(prefix+'MVA_'+method+'_B')
@@ -51,12 +57,21 @@ for hist in BackgroundVarsOutput:
     hist.SetTitle(';'+hist.GetTitle()+';Normalized')
     pystyle.hstyle(hist,bfill,bfillc,blinec)
 
-legend = pystyle.legend(SignalOutput,BackgroundOutput)
-    
-c_MVA = ROOT.TCanvas('c_MVA')
+R_legend = pystyle.right_legend(SignalOutput,BackgroundOutput,'f')
+L_legend = pystyle.left_legend(SignalTrain,BackgroundTrain,'lep')
+
+c_MVA = ROOT.TCanvas('c_MVA','c_MVA')
 SignalOutput.Draw('hist')
 BackgroundOutput.Draw('hist,same')
-legend.Draw('same')
+R_legend.Draw('same')
+
+c_MVA_train = ROOT.TCanvas('c_MVA_train','c_MVA_train')
+SignalOutput.Draw('hist')
+BackgroundOutput.Draw('hist,same')
+SignalTrain.Draw('e1same')
+BackgroundTrain.Draw('e1same')
+R_legend.Draw('same')
+L_legend.Draw('same')
 
 cs = [ROOT.TCanvas('c_'+name,'c_'+name) for name in var_list]
 for i in xrange(len(cs)):

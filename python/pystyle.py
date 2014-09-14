@@ -75,6 +75,9 @@ def hstyle(hist,fill,fillc,linec):
     hist.SetLineColor(linec)
     hist.SetFillColor(fillc)
     hist.SetLineWidth(2)
+    hist.SetMarkerColor(linec)
+    hist.SetMarkerStyle(8)
+    hist.SetMarkerSize(.5)
     hist.GetXaxis().SetLabelSize(0.042)
     hist.GetXaxis().SetLabelFont(42)
     hist.GetXaxis().SetTitleSize(0.048)
@@ -84,10 +87,20 @@ def hstyle(hist,fill,fillc,linec):
     hist.GetYaxis().SetTitleSize(0.048)
     hist.GetYaxis().SetTitleFont(42)
     
-def legend(sig,bkg):
+def right_legend(sig,bkg,marker):
     legend = ROOT.TLegend(.73,.80,.93,.91)
-    legend.AddEntry(sig,'Signal','f')
-    legend.AddEntry(bkg,'Background','f')
+    legend.AddEntry(sig,'Signal',marker)
+    legend.AddEntry(bkg,'Background',marker)
+    legend.SetTextSize(0.046)
+    legend.SetTextFont(42)
+    legend.SetBorderSize(0)
+    legend.SetFillColor(0)
+    return legend
+
+def left_legend(sig,bkg,marker):
+    legend = ROOT.TLegend(.13,.80,.33,.91)
+    legend.AddEntry(sig,'Signal (train)',marker)
+    legend.AddEntry(bkg,'Background (train)',marker)
     legend.SetTextSize(0.046)
     legend.SetTextFont(42)
     legend.SetBorderSize(0)
