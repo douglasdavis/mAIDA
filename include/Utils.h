@@ -15,24 +15,28 @@
 namespace mAIDA {
   
   inline bool good_el(const int tight, const float pt, const float eta,
-		      const float Etcone20, const float ptcone30)
+		      const float Etcone20, const float ptcone30,
+		      const float long_imp_param)
   {
     if ( ( tight > 0 ) &&
 	 ( pt > 25.0e3 ) &&
 	 ( std::fabs(eta) < 2.47 ) &&
 	 !( (std::fabs(eta) > 1.37) && (std::fabs(eta) < 1.52) ) &&
-	 ( Etcone20 < 4.0e3 ) && ( ptcone30 < 2.5e3 ) ) {
+	 ( Etcone20 < 4.0e3 ) && ( ptcone30 < 2.5e3 ) &&
+	 ( long_imp_param < 2 ) ) {
       return true;
     }
     return false;
   }
   
   inline bool good_mu(const float pt, const float eta,
-		      const float Etcone20, const float ptcone30)
+		      const float Etcone20, const float ptcone30,
+		      const float long_imp_param)
   {
     if ( ( pt > 20.0e3 ) &&
 	 ( std::fabs(eta) < 2.5 ) &&
-	 ( Etcone20 < 4.0e3 ) && ( ptcone30 < 2.5e3 ) ) {
+	 ( Etcone20 < 4.0e3 ) && ( ptcone30 < 2.5e3 ) &&
+	 ( long_imp_param < 2 ) ) {
       return true;
     }
     return false;

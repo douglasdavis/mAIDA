@@ -6,3 +6,5 @@ ht		MeV	F
 dR_avg_l	MeV	F
 dR_ll_sl	MeV	F
 dR_lj_sj	MeV	F
+m_leptons	MeV	F
+m_jets		MeV	F

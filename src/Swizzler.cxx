@@ -33,7 +33,8 @@ void mAIDA::Swizzler::Loop()
 
     for ( auto iel = 0; iel < el_n; ++iel ) {
       if ( mAIDA::good_el(el_tight->at(iel),el_pt->at(iel),el_eta->at(iel),
-			  el_Etcone20->at(iel),el_ptcone30->at(iel)) ) {
+			  el_Etcone20->at(iel),el_ptcone30->at(iel),
+			  el_trackz0pvunbiased->at(iel)) ) {
 	mAIDA::Lepton el;
 	el.Set_pdgId(mAIDA::k_el);
 	el.Set_charge(el_charge->at(iel));
@@ -48,19 +49,20 @@ void mAIDA::Swizzler::Loop()
       } // if pass all the cuts (see 7 TeV AIDA PRD)
     } // for all electrons
 
-    for ( auto imu = 0; imu < mu_n; ++imu ) {
-      if ( mAIDA::good_mu(mu_pt->at(imu),mu_eta->at(imu),
-			  mu_etcone20->at(imu),mu_ptcone30->at(imu)) ) {
+    for ( auto imu = 0; imu < mu_muid_n; ++imu ) {
+      if ( mAIDA::good_mu(mu_muid_pt->at(imu),mu_muid_eta->at(imu),
+			  mu_muid_etcone20->at(imu),mu_muid_ptcone30->at(imu),
+			  mu_muid_id_z0_exPV->at(imu)) ) {
 	mAIDA::Lepton mu;
 	mu.Set_pdgId(mAIDA::k_mu);
-	mu.Set_charge(mu_charge->at(imu));
-	mu.Set_px(mu_px->at(imu));
-	mu.Set_py(mu_py->at(imu));
-	mu.Set_pz(mu_pz->at(imu));
-	mu.Set_PtEtaPhiE(mu_pt->at(imu),
-			 mu_eta->at(imu),
-			 mu_phi->at(imu),
-			 mu_E->at(imu));
+	mu.Set_charge(mu_muid_charge->at(imu));
+	mu.Set_px(mu_muid_px->at(imu));
+	mu.Set_py(mu_muid_py->at(imu));
+	mu.Set_pz(mu_muid_pz->at(imu));
+	mu.Set_PtEtaPhiE(mu_muid_pt->at(imu),
+			 mu_muid_eta->at(imu),
+			 mu_muid_phi->at(imu),
+			 mu_muid_E->at(imu));
 	FinalState.AddLepton(mu);
       } // if pass all cuts (see 7 TeV AIDA PRD)
     } // for all muons
