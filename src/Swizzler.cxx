@@ -45,7 +45,7 @@ void mAIDA::Swizzler::Loop()
 			 el_phi->at(iel),
 			 el_E->at(iel));
 	FinalState.AddLepton(el);
-      } // if pass pt and eta cut
+      } // if pass all the cuts (see 7 TeV AIDA PRD)
     } // for all electrons
 
     for ( auto imu = 0; imu < mu_n; ++imu ) {
@@ -62,7 +62,7 @@ void mAIDA::Swizzler::Loop()
 			 mu_phi->at(imu),
 			 mu_E->at(imu));
 	FinalState.AddLepton(mu);
-      } // if pass pt and eta cut
+      } // if pass all cuts (see 7 TeV AIDA PRD)
     } // for all muons
 
     for ( auto ijet = 0; ijet < jet_AntiKt4LCTopo_n; ++ijet ) {
@@ -74,11 +74,13 @@ void mAIDA::Swizzler::Loop()
 			  jet_AntiKt4LCTopo_E->at(ijet));
 	jet.Set_MV1(jet_AntiKt4LCTopo_flavor_weight_MV1->at(ijet));
 	FinalState.AddJet(jet);
-      }
-    }
+      } // if pass all the cuts (see 7 TeV AIDA PRD)
+    } // for all jets
 
+    // set the MET for the event
     FinalState.Set_MET(MET_RefFinal_tightpp_sumet);
     
+    // now we do some if statements so we fill the tree with only what we want
     if ( _ssdilepton ) {
       if ( ( FinalState.Leptons().size() == 2 ) &&
 	   ( FinalState.Leptons().at(0).charge() + FinalState.Leptons().at(1).charge() != 0 ) ) {
@@ -113,8 +115,8 @@ void mAIDA::Swizzler::Loop()
     
   } // for all events
 
+  // and finally write to the tree
   _out_tree->Write();
   _out_file->Close();
   
 }
-
