@@ -118,6 +118,7 @@ void mAIDA::VariableFiller::Loop(const char* fname)
 
     // if no jets set all the leading jet vars to lame shit
     if ( fs->Jets().size() == 0 ) {
+      ht_jets = 0;
       continue;
     }
 
@@ -131,8 +132,9 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     // and start summing njets_b
     current_max = -9e10;
     for ( const auto& jet : fs->Jets() ) {
+      float temp_m = jet.four_vector().M();
+      ht_jets += std::sqrt(temp_m*temp_m + jet.pt()*jet.pt()); // sqrt(pT^2 + m^2)
       ht      += jet.pt();
-      ht_jets += jet.pt();
       if ( jet.MV1() > 0.7892 ) {
 	njets_b++;
       }

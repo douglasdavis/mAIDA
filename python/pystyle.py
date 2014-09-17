@@ -12,8 +12,8 @@ def normalize_hists(sig,bkg):
     if bkg.GetSumOfWeights() != 0:
         dx = (bkg.GetXaxis().GetXmax() - bkg.GetXaxis().GetXmin())/bkg.GetNbinsX()
         bkg.Scale(1.0/bkg.GetSumOfWeights()/dx)
-    sb = 1.1
-    ss = 1.1
+    sb = 1.3
+    ss = 1.3
     sig.SetMaximum(ROOT.TMath.Max(sig.GetMaximum()*ss,
                                   bkg.GetMaximum()*sb))
 
