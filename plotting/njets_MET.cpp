@@ -6,6 +6,7 @@
 #include "TTree.h"
 #include "TCanvas.h"
 #include "TChain.h"
+#include "TH2F.h"
 
 int main(int argc, char *argv[])
 {
@@ -29,16 +30,18 @@ int main(int argc, char *argv[])
     intree->GetEntry(i);
     h_MET->Fill(MET/1e3);
     h_njets->Fill(njets);
-    h_ps->Fill(MET,njets);
+    h_ps->Fill(MET/1e3,njets);
   }
 
   TApplication tapp("tapp",&argc,argv);
+
   TCanvas *c_MET = new TCanvas("c_MET","c_MET");
   h_MET->Draw();
   TCanvas *c_njets = new TCanvas("c_njets","c_njets");
   h_njets->Draw();
   TCanvas *c_ps = new TCanvas("c_ps","c_ps");
-  c_ps->Draw();
+  h_ps->Draw("lego");
+
   tapp.Run();
   return 0;
 }
