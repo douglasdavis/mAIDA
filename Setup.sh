@@ -4,9 +4,12 @@ user=`whoami`
 #if [ `hostname` == 'atl010.phy.duke.edu' ] || [ `hostname` == 'atl009.phy.duke.edu' ]; then
 if [ $ATL_MACHINE == 'yes' ]; then
     setupATLAS
-    # using root version 5.34.13 on the SLC6 machiens because
+    # using root version 5.34.13 on the SLC6 machines because
     # i know it runs TMVA smoothly and doesnt have the
     # PyROOT TLeaf bug that wasnt fixed until 5.34.20
+    # 
+    # set path to kind cmake28 installed in $HOME
+    # set boost_root for cmake to find it
     root_version=5.34.13-x86_64-slc6-gcc47-opt
     source ${ATLAS_LOCAL_ROOT_BASE}/packageSetups/atlasLocalROOTSetup.sh --rootVersion $root_version
     export CXX=g++;
@@ -17,7 +20,7 @@ if [ $ATL_MACHINE == 'yes' ]; then
 fi
 
 # Must have $ROOTSYS defined
-# Must have $ROOTSYS/thisroot.sh sources
+# Must have $ROOTSYS/thisroot.sh sourced
 # Must have Boost installed
 # Must have $BOOST_ROOT defined (if  necessary, cmake
 #   module might be able to fine it automatically)
