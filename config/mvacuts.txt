@@ -1,2 +1,2 @@
-sig	njets>-1
-bkg	njets>-1
+sig	njets>1
+bkg	njets>1

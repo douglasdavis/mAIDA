@@ -85,7 +85,7 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     // of each iteration because they are summed up
     njets_b = 0;
     ht      = 0;
-
+    ht_jets = 0;
     //________________________________________________________________________________
       
     // declare particles to be used for

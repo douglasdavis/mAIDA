@@ -4,7 +4,5 @@ njets_b		arb	I
 ht		MeV	F
 ht_jets		MeV	F
 m_jets		MeV	F
-dR_avg_l	MeV	F
 dR_avg_j	MeV	F
-dR_ll_sl	MeV	F
 dR_lj_sj	MeV	F

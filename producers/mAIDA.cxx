@@ -149,9 +149,9 @@ int main(int argc, char *argv[])
 					"nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");
 
     if ( vm["mva-method"].as<std::string>() == "BDT" ) {
-      //factory->BookMethod(TMVA::Types::kBDT,"BDT",
-      //"!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20");
-      factory->BookMethod(TMVA::Types::kBDT,"BDT","NTrees=400:MaxDepth=2"); 
+      factory->BookMethod(TMVA::Types::kBDT,"BDT",
+			  "!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20");
+      //      factory->BookMethod(TMVA::Types::kBDT,"BDT","NTrees=400:MaxDepth=2"); 
     }
     else {
       std::cout << desc << std::endl;
