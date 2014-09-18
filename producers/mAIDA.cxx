@@ -153,6 +153,13 @@ int main(int argc, char *argv[])
 			  "!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20");
       //      factory->BookMethod(TMVA::Types::kBDT,"BDT","NTrees=400:MaxDepth=2"); 
     }
+    else if ( vm["mva-method"].as<std::string>() == "HMatrix" ) {
+      factory->BookMethod( TMVA::Types::kHMatrix, "HMatrix", "!H:!V" );
+    }
+    else if ( vm["mva-method"].as<std::string>() == "MLP" ) {
+      factory->BookMethod( TMVA::Types::kMLP, "MLP", "H:!V:NeuronType=tanh:VarTransform=N:NCycles=60:HiddenLayers=N+5:TestRate=5:!UseRegulator" );
+    }
+
     else {
       std::cout << desc << std::endl;
     }

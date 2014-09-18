@@ -1,7 +1,8 @@
 # mAIDA bash script to setup env
 
 user=`whoami`
-if [ `hostname` == 'atl010.phy.duke.edu' ] || [ `hostname` == 'atl009.phy.duke.edu' ]; then
+#if [ `hostname` == 'atl010.phy.duke.edu' ] || [ `hostname` == 'atl009.phy.duke.edu' ]; then
+if [ $ATL_MACHINE == 'yes' ]; then
     setupATLAS
     # using root version 5.34.13 on the SLC6 machiens because
     # i know it runs TMVA smoothly and doesnt have the
