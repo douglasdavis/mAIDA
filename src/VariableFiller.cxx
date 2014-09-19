@@ -14,6 +14,9 @@
 
 void mAIDA::VariableFiller::Loop(const char* fname)
 {
+  mAIDA::FinalState *fs = new mAIDA::FinalState();
+  _in_tree->SetBranchAddress("FinalState",&fs);
+
   TFile *ofile      = new TFile(fname,"RECREATE");
   TTree *mvavartree = new TTree("mvavartree","mvavartree");
 
@@ -67,9 +70,6 @@ void mAIDA::VariableFiller::Loop(const char* fname)
   mvavartree->Branch("m_leptons",&m_leptons,"m_leptons/F");
   mvavartree->Branch("m_jets",   &m_jets,   "m_jets/F");
     
-  mAIDA::FinalState *fs = new mAIDA::FinalState();
-  _in_tree->SetBranchAddress("FinalState",&fs);
-
   // ________________________________________________________________________________
     
   // loop over each final state
