@@ -35,11 +35,11 @@ int main(int argc, char *argv[])
 
   TApplication tapp("tapp",&argc,argv);
 
-  TCanvas *c_MET = new TCanvas("c_MET","c_MET");
+  TCanvas c_MET("c_MET","c_MET");
   h_MET->Draw();
-  TCanvas *c_njets = new TCanvas("c_njets","c_njets");
+  TCanvas c_njets("c_njets","c_njets");
   h_njets->Draw();
-  TCanvas *c_ps = new TCanvas("c_ps","c_ps");
+  TCanvas c_ps("c_ps","c_ps");
   h_ps->Draw("lego");
 
   tapp.Run();

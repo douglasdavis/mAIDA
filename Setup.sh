@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # mAIDA bash script to setup env
 
 user=`whoami`
