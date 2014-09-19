@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     ("osdilepton",         "flag for opposite sign dilepton events")
     ("trilepton",          "flag for trilepton events")
     ("fourlepton",         "flag for fourlepton events")
-    ("mva-method",         boost::program_options::value<std::string>(),"MVA Method to use (e.g. BDT, ANN)");
+    ("mva-methods",        boost::program_options::value<std::vector<std::string> >()->multitoken(),"MVA Methods to use (e.g. BDT, ANN)");
 
   boost::program_options::variables_map vm;
   boost::program_options::store(boost::program_options::parse_command_line(argc,argv,desc),vm);
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
   else if ( vm.count("mva") ) {
 
     // make sure mva required input exists 
-    if ( !vm.count("out-file") || !vm.count("signal") || !vm.count("backgrounds") || !vm.count("mva-method") ) {
+    if ( !vm.count("out-file") || !vm.count("signal") || !vm.count("backgrounds") || !vm.count("mva-methods") ) {
       std::cout << desc << std::endl;
       return 0;
     }
@@ -148,21 +148,19 @@ int main(int argc, char *argv[])
     factory->PrepareTrainingAndTestTree(sig_cut,bkg_cut,
 					"nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");
 
-    if ( vm["mva-method"].as<std::string>() == "BDT" ) {
-      //      factory->BookMethod(TMVA::Types::kBDT,"BDT",
-			  //			  "!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20");
-      factory->BookMethod(TMVA::Types::kBDT,"BDT","NTrees=400:MaxDepth=2"); 
-    }
-    else if ( vm["mva-method"].as<std::string>() == "HMatrix" ) {
-      factory->BookMethod( TMVA::Types::kHMatrix, "HMatrix", "!H:!V" );
-    }
-    else if ( vm["mva-method"].as<std::string>() == "MLP" ) {
-      factory->BookMethod( TMVA::Types::kMLP, "MLP", "H:!V:NeuronType=tanh:VarTransform=N:NCycles=60:HiddenLayers=N+5:TestRate=5:!UseRegulator" );
-    }
+    auto methods_vector = vm["mva-methods"].as<std::vector<std::string> >();
 
-    else {
-      std::cout << desc << std::endl;
-    }
+    if ( std::find(methods_vector.begin(), methods_vector.end(), "BDT") != methods_vector.end() )
+      factory->BookMethod(TMVA::Types::kBDT,"BDT","NTrees=400:MaxDepth=2"); 
+
+    if ( std::find(methods_vector.begin(), methods_vector.end(), "HMatrix") != methods_vector.end() )
+      factory->BookMethod(TMVA::Types::kHMatrix,"HMatrix","!H:!V");
+
+    // if ( std::find(methods_vector.begin(), methods_vector.end(), "FD") != methods_vector.end() )
+    
+    if ( std::find(methods_vector.begin(), methods_vector.end(), "MLP") != methods_vector.end() )
+      factory->BookMethod(TMVA::Types::kMLP,"MLP","H:!V:NeuronType=tanh:VarTransform=N:NCycles=60:HiddenLayers=N+5:TestRate=5:!UseRegulator" );
+
 
     factory->TrainAllMethods();
     factory->TestAllMethods();
@@ -177,3 +175,17 @@ int main(int argc, char *argv[])
   }
 
 }
+
+////////////////////////////////
+////////////////////////////////
+// other book method options
+
+// BDT
+      //factory->BookMethod(TMVA::Types::kBDT,"BDT",
+      //"!H:!V:NTrees=1000:MinNodeSize=2.5%:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20");
+
+// MLP
+
+// FD
+
+// HMatrix
