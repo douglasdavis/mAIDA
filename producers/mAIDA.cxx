@@ -154,13 +154,13 @@ int main(int argc, char *argv[])
       factory->BookMethod(TMVA::Types::kBDT,"BDT","NTrees=400:MaxDepth=2"); 
 
     if ( std::find(methods_vector.begin(), methods_vector.end(), "HMatrix") != methods_vector.end() )
-      factory->BookMethod(TMVA::Types::kHMatrix,"HMatrix","!H:!V");
+      factory->BookMethod(TMVA::Types::kHMatrix,"HMatrix","H:V");
 
-    // if ( std::find(methods_vector.begin(), methods_vector.end(), "FD") != methods_vector.end() )
-    
+    if ( std::find(methods_vector.begin(), methods_vector.end(), "FD") != methods_vector.end() )
+      factory->BookMethod(TMVA::Types::kFisher,"Fisher","H:V:Fisher:CreateMVAPdfs:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10");
+
     if ( std::find(methods_vector.begin(), methods_vector.end(), "MLP") != methods_vector.end() )
-      factory->BookMethod(TMVA::Types::kMLP,"MLP","H:!V:NeuronType=tanh:VarTransform=N:NCycles=60:HiddenLayers=N+5:TestRate=5:!UseRegulator" );
-
+      factory->BookMethod(TMVA::Types::kMLP,"MLP","H:V:NeuronType=tanh:VarTransform=N:NCycles=60:HiddenLayers=N+5:TestRate=5:!UseRegulator");
 
     factory->TrainAllMethods();
     factory->TestAllMethods();
