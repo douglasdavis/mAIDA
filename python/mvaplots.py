@@ -22,11 +22,14 @@ method = args['method']
 prefix = 'Method_'+method+'/'+method+'/'
 
 sfill  = 1001
-bfill  = 3354
+bfill  = 3254
 sfillc = ROOT.TColor.GetColor('#7d99d1')
 bfillc = ROOT.TColor.GetColor('#ff0000')
 slinec = ROOT.TColor.GetColor('#0000ee')
 blinec = ROOT.TColor.GetColor('#ff0000')
+
+bfillc = ROOT.kGray+2
+blinec = ROOT.kGray+2
 
 SignalTrain      = infile.Get(prefix+'MVA_'+method+'_Train_S')
 BackgroundTrain  = infile.Get(prefix+'MVA_'+method+'_Train_B')
@@ -73,11 +76,14 @@ BackgroundTrain.Draw('e1same')
 R_legend.Draw('same')
 L_legend.Draw('same')
 
+c_MVA_train.SaveAs('c_MVA_train'+method+'.eps')
+
 cs = [ROOT.TCanvas('c_'+name,'c_'+name) for name in var_list]
 for i in xrange(len(cs)):
     cs[i].cd()
     pystyle.normalize_hists(SignalVarsOutput[i],BackgroundVarsOutput[i])
     SignalVarsOutput[i].Draw('hist')
     BackgroundVarsOutput[i].Draw('hist,same')
-
+    #cs[i].SaveAs('c_'+var_list[i]+'.eps')
+    
 raw_input('')

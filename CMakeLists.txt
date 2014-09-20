@@ -53,3 +53,4 @@ target_link_libraries(mAIDA ${ROOT_LIBRARIES} TMVA)
 
 add_subdirectory(producers)
 add_subdirectory(plotting)
+add_subdirectory(readers)
