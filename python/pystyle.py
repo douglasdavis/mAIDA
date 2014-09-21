@@ -86,6 +86,18 @@ def hstyle(hist,fill,fillc,linec):
     hist.GetYaxis().SetLabelFont(42)
     hist.GetYaxis().SetTitleSize(0.048)
     hist.GetYaxis().SetTitleFont(42)
+
+def hstyle2(hist):
+    hist.GetXaxis().SetLabelSize(0.042)
+    hist.GetXaxis().SetLabelFont(42)
+    hist.GetXaxis().SetTitleSize(0.048)
+    hist.GetXaxis().SetTitleFont(42)
+    hist.GetYaxis().SetLabelSize(0.042)
+    hist.GetYaxis().SetLabelFont(42)
+    hist.GetYaxis().SetTitleSize(0.048)
+    hist.GetYaxis().SetTitleFont(42)
+    hist.GetXaxis().SetTitleOffset(1.3)
+    hist.GetYaxis().SetTitleOffset(1.3)
     
 def right_legend(sig,bkg,marker):
     legend = ROOT.TLegend(.73,.80,.93,.91)

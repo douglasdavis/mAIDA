@@ -26,8 +26,9 @@ int main(int argc, char *argv[])
   
   TMVA::Reader *reader = new TMVA::Reader("V:Color:!Silent");
   Float_t ht_jets, ht, MET, m_jets, m_leptons;
-  Float_t njets,njets_b;
-
+  Float_t njets, njets_b;
+  Int_t njets_int;
+  
   reader->AddVariable("MET",&MET);
   reader->AddVariable("ht",&ht);
   reader->AddVariable("ht_jets",&ht_jets);
@@ -65,18 +66,21 @@ int main(int argc, char *argv[])
   out_tree->Branch("Fisher_response",&Fisher_response,"Fisher_response/F");
   out_tree->Branch("MLP_response",&MLP_response,"MLP_response/F");
   out_tree->Branch("HMatrix_response",&HMatrix_response,"HMatrix_response/F");
+  out_tree->Branch("MET",&MET,"MET/F");
+  out_tree->Branch("njets_int",&njets_int,"njets_int/I");
 
   for ( Long64_t i = 0; i < tree->GetEntries(); ++i ) {
     tree->GetEntry(i);
 
-    njets   = user_njets;
-    njets_b = user_njets_b;
+    njets_int = (Int_t)user_njets;
+    njets     = user_njets;
+    njets_b   = user_njets_b;
 
     BDT_response     = reader->EvaluateMVA("BDT method");
     Fisher_response  = reader->EvaluateMVA("Fisher method");
     MLP_response     = reader->EvaluateMVA("MLP method");
     HMatrix_response = reader->EvaluateMVA("HMatrix method");
-
+    
     out_tree->Fill();    
   }
 
