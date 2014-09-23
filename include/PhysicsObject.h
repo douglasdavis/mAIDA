@@ -21,7 +21,7 @@ namespace mAIDA {
 
   protected:
     
-    TLorentzVector _four_vector;
+    TLorentzVector _four_vector;  ///< the four vector for the object (see ROOT TLorentzVector class for more) 
 
     ClassDef(PhysicsObject,2);
     

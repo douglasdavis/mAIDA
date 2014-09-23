@@ -23,13 +23,13 @@ namespace mAIDA {
 
   private:
 
-    std::string                _InteractionType;
-    std::vector<mAIDA::Jet>    _Jets;
-    std::vector<mAIDA::Lepton> _Leptons;
-    float                      _MET;
-    bool                       _ee;
-    bool                       _eu;
-    bool                       _uu;
+    std::string                _InteractionType;  ///< ssdi, osdi, tri, four lepton
+    std::vector<mAIDA::Jet>    _Jets;             ///< all passing jets
+    std::vector<mAIDA::Lepton> _Leptons;          ///< all passing leptons
+    float                      _MET;              ///< Missing E_T
+    bool                       _ee;               ///< true if dilepton both electrons
+    bool                       _eu;               ///< true if dilepton electron, muon
+    bool                       _uu;               ///< true if dilepton both muons
     
     ClassDef(FinalState,2);
     
@@ -38,23 +38,23 @@ namespace mAIDA {
     FinalState();
     virtual ~FinalState();
 
-    void SetInteractionType(const std::string name);
-    void AddLepton(const mAIDA::Lepton& lepton);
-    void AddJet(const mAIDA::Jet& jet);
-    void ClearVecs();
-    void Set_MET(const float i);
-    void Set_ee(const bool i);
-    void Set_eu(const bool i);
-    void Set_uu(const bool i);
+    void SetInteractionType(const std::string name); //!< set the type, ssdi,osdi,tri,four lepton
+    void AddLepton(const mAIDA::Lepton& lepton);     //!< add a lepton
+    void AddJet(const mAIDA::Jet& jet);              //!< add a jet
+    void ClearVecs();                                //!< clear the jet and lepton vectors
+    void Set_MET(const float i);                     //!< set the missing E_T
+    void Set_ee(const bool i);                       //!< set boolean for 2 electrons
+    void Set_eu(const bool i);                       //!< set boolean for electron, muon
+    void Set_uu(const bool i);                       //!< set boolean for 2 muons
 
-    const std::string&                InteractionType() const;
-    const std::vector<mAIDA::Lepton>& Leptons()          const;
-    const std::vector<mAIDA::Jet>&    Jets()             const;
+    const std::string&                InteractionType() const; //!< getter for type
+    const std::vector<mAIDA::Lepton>& Leptons()         const; //!< getter for lepton vector
+    const std::vector<mAIDA::Jet>&    Jets()            const; //!< getter for jet vector
 
-    float MET() const;
-    bool  ee()  const;
-    bool  eu()  const;
-    bool  uu()  const;
+    float MET() const;  //!< getter for missing E_T
+    bool  ee()  const;  //!< getter for 2 electron bool
+    bool  eu()  const;  //!< getter for electron, muon bool
+    bool  uu()  const;  //!< getter for 2 muon bool
     
   };
 

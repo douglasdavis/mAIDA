@@ -21,7 +21,7 @@ namespace mAIDA {
     
   private:
     
-    float _MV1;
+    float _MV1; ///< b-tagging weight
 
     ClassDef(Jet,3);
     
