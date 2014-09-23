@@ -22,7 +22,6 @@ h2_Fisher_BDT_ttZ = ROOT.TH2F('h2_Fisher_BDT_ttZ','ttZ;Fisher Response;BDT Respo
 def fill_hists(tree,hist1,hist2):
     for event in tree:
         hist1.Fill(event.MET/1.0e3,event.njets_int)
-        print event.njets_int
         hist2.Fill(event.Fisher_response,event.BDT_response)
     pystyle.hstyle2(hist1)
     pystyle.hstyle2(hist2)
@@ -45,4 +44,10 @@ h2_MET_njets_ttW.Draw("lego")
 c6 = ROOT.TCanvas()
 h2_MET_njets_ttZ.Draw("lego")
 
+cs = [c1,c2,c3,c4,c5,c6]
+i = 0
+for o in cs:
+    o.SaveAs('c_'+str(i)+'.eps')
+    i = i + 1
+    
 raw_input('')

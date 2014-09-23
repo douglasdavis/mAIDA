@@ -84,6 +84,6 @@ for i in xrange(len(cs)):
     pystyle.normalize_hists(SignalVarsOutput[i],BackgroundVarsOutput[i])
     SignalVarsOutput[i].Draw('hist')
     BackgroundVarsOutput[i].Draw('hist,same')
-    #cs[i].SaveAs('c_'+var_list[i]+'.eps')
+    cs[i].SaveAs('c_'+var_list[i]+'.eps')
     
 raw_input('')
