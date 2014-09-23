@@ -7,9 +7,14 @@
 #include "FinalState.h"
 
 namespace mAIDA {
-
-  FinalState::FinalState() {}
-
+  
+  FinalState::FinalState() :
+    _MET(-999),
+    _ee(false),
+    _eu(false),
+    _uu(false)
+  {}
+  
   FinalState::~FinalState() {}
-
+  
 }
