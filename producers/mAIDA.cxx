@@ -18,29 +18,29 @@ int main(int argc, char *argv[])
   // (google boost program options for info on this library)
   boost::program_options::options_description desc("mAIDA");
   desc.add_options()
-    ("help,h",             "Print help message")
-    ("final-state-tree,f","flag to make final state tree (swizzle),\nrequires data-dir, out-file, and 1 of the n-leptons flags (see below)")
-    ("var-tree,v",         "flag to make variable tree, requires in-file, out-file")
-    ("mva,m",              "flag to run the mva, requires out-file, signal, blackgrounds, and a method (see below)")
-    ("data-dir,d",         boost::program_options::value<std::string>(),"Directory containing ROOT files (required for -f)")
-    ("out-file,o",         boost::program_options::value<std::string>(),"Output ROOT file name (always required)")
-    ("in-file,i",          boost::program_options::value<std::string>(),"Input ROOT file name (required for var-tree)")
-    ("signal,s",           boost::program_options::value<std::string>(),"signal ROOT file required for mva")
-    ("backgrounds,b",      boost::program_options::value< std::vector<std::string> >()->multitoken(), "background ROOT files required for mva")
-    ("ssdilepton",         "flag for same sign dilepton events")
-    ("osdilepton",         "flag for opposite sign dilepton events")
-    ("trilepton",          "flag for trilepton events")
-    ("fourlepton",         "flag for fourlepton events")
-    ("mva-methods",        boost::program_options::value<std::vector<std::string> >()->multitoken(),"MVA Methods to use (e.g. BDT, ANN)");
+    ("help,h",      "Print help message")
+    ("fst,f",       "flag to make final state tree (swizzle),\nrequires data-dir, out-file, and 1 of the n-leptons flags (see below)")
+    ("var-tree,v",  "flag to make variable tree, requires in-file, out-file")
+    ("mva,m",       "flag to run the mva, requires out-file, signal, blackgrounds, and a method (see below)")
+    ("data-dir,d",  boost::program_options::value<std::string>(),"Directory containing ROOT files (required for -f)")
+    ("out-file,o",  boost::program_options::value<std::string>(),"Output ROOT file name (always required)")
+    ("in-file,i",   boost::program_options::value<std::string>(),"Input ROOT file name (required for var-tree)")
+    ("sig,s",       boost::program_options::value<std::string>(),"sig ROOT file required for mva")
+    ("bkgs,b",      boost::program_options::value< std::vector<std::string> >()->multitoken(), "background ROOT files required for mva")
+    ("ssdilepton",  "flag for same sign dilepton events")
+    ("osdilepton",  "flag for opposite sign dilepton events")
+    ("trilepton",   "flag for trilepton events")
+    ("fourlepton",  "flag for fourlepton events")
+    ("mva-methods", boost::program_options::value<std::vector<std::string> >()->multitoken(),"MVA Methods to use (e.g. BDT, ANN)");
 
   boost::program_options::variables_map vm;
   boost::program_options::store(boost::program_options::parse_command_line(argc,argv,desc),vm);
   boost::program_options::notify(vm);
 
-  // if the final-state-tree flag was used
-  if ( vm.count("final-state-tree") ) {
+  // if the fst flag was used
+  if ( vm.count("fst") ) {
 
-    // make sure final-state-tree required input exists
+    // make sure fst required input exists
     if ( !vm.count("data-dir") || !vm.count("out-file") ) {
       std::cout << desc << std::endl;
       return 0;
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     swizz.Loop();
     return 0;
 
-  } // if final-state-tree
+  } // if fst
 
   // if the var-tree flag was used
   else if ( vm.count("var-tree") ) {
@@ -85,19 +85,19 @@ int main(int argc, char *argv[])
   else if ( vm.count("mva") ) {
 
     // make sure mva required input exists 
-    if ( !vm.count("out-file") || !vm.count("signal") || !vm.count("backgrounds") || !vm.count("mva-methods") ) {
+    if ( !vm.count("out-file") || !vm.count("sig") || !vm.count("bkgs") || !vm.count("mva-methods") ) {
       std::cout << desc << std::endl;
       return 0;
     }
 
     // setup the sig, bkg manager
     mAIDA::MVASigBkg sb_set;
-    sb_set.set_sig(vm["signal"].as<std::string>(),
-		   vm["signal"].as<std::string>().c_str(),
+    sb_set.set_sig(vm["sig"].as<std::string>(),
+		   vm["sig"].as<std::string>().c_str(),
 		   "mvavartree",1.0);
 
-    // add all the backgrounds from command line arg.
-    for ( auto const& ibkg : vm["backgrounds"].as< std::vector<std::string> >() )
+    // add all the bkgs from command line arg.
+    for ( auto const& ibkg : vm["bkgs"].as< std::vector<std::string> >() )
       sb_set.add_bkg(ibkg,ibkg.c_str(),"mvavartree",1.0);
 
     TFile *TMVAFile        = new TFile(vm["out-file"].as<std::string>().c_str(),"RECREATE");
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 
     // add the signal from the signal background manager set to the factory
     factory->AddSignalTree(sb_set.sig_tree(),sb_set.sig_weight());
-    // use the signal background manager function to add the backgrounds to the factorhy
+    // use the signal background manager function to add the bkgs to the factorhy
     sb_set.add_bkg_to_factory(factory);
 
     // now we prepare, book, train, test, and evaluate
