@@ -16,5 +16,5 @@ namespace mAIDA {
   {}
   
   FinalState::~FinalState() {}
-  
+
 }

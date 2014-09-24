@@ -46,6 +46,7 @@ namespace mAIDA {
     void Set_ee(const bool i);                       //!< set boolean for 2 electrons
     void Set_eu(const bool i);                       //!< set boolean for electron, muon
     void Set_uu(const bool i);                       //!< set boolean for 2 muons
+    void Falsify();                                  //!< sets all flavor combinations to false
 
     const std::string&                InteractionType() const; //!< getter for type
     const std::vector<mAIDA::Lepton>& Leptons()         const; //!< getter for lepton vector
@@ -60,14 +61,15 @@ namespace mAIDA {
 
 }
 
-inline void mAIDA::FinalState::SetInteractionType(const std::string name) { _InteractionType = name;         }
-inline void mAIDA::FinalState::AddLepton(const mAIDA::Lepton& lepton)     { _Leptons.push_back(lepton);      }
-inline void mAIDA::FinalState::AddJet(const mAIDA::Jet& jet)              { _Jets.push_back(jet);            }
-inline void mAIDA::FinalState::ClearVecs()                                { _Leptons.clear(); _Jets.clear(); }
-inline void mAIDA::FinalState::Set_MET(const float i)                     { _MET = i;                        }
-inline void mAIDA::FinalState::Set_ee(const bool i)                       { _ee  = i;                        }
-inline void mAIDA::FinalState::Set_eu(const bool i)                       { _eu  = i;                        }
-inline void mAIDA::FinalState::Set_uu(const bool i)                       { _uu  = i;                        }
+inline void mAIDA::FinalState::SetInteractionType(const std::string name) { _InteractionType = name;               }
+inline void mAIDA::FinalState::AddLepton(const mAIDA::Lepton& lepton)     { _Leptons.push_back(lepton);            }
+inline void mAIDA::FinalState::AddJet(const mAIDA::Jet& jet)              { _Jets.push_back(jet);                  }
+inline void mAIDA::FinalState::ClearVecs()                                { _Leptons.clear(); _Jets.clear();       }
+inline void mAIDA::FinalState::Set_MET(const float i)                     { _MET = i;                              }
+inline void mAIDA::FinalState::Set_ee(const bool i)                       { _ee  = i;                              }
+inline void mAIDA::FinalState::Set_eu(const bool i)                       { _eu  = i;                              }
+inline void mAIDA::FinalState::Set_uu(const bool i)                       { _uu  = i;                              }
+inline void mAIDA::FinalState::Falsify()                                  { _ee = false; _eu = false; _uu = false; }
 
 inline const std::string&                mAIDA::FinalState::InteractionType() const { return _InteractionType; }
 inline const std::vector<mAIDA::Lepton>& mAIDA::FinalState::Leptons()         const { return _Leptons;         }

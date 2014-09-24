@@ -27,6 +27,8 @@ void mAIDA::Swizzler::Loop()
   _out_tree->Branch("FinalState",&FinalState);
   
   for ( auto eventid = 0; eventid < nentries; ++eventid ) {
+
+    FinalState.Falsify();
     
     fRealChain->GetEntry(eventid);
     if ( eventid%1000 == 0 ) std::cout << "Event: " << eventid << std::endl;
@@ -87,6 +89,7 @@ void mAIDA::Swizzler::Loop()
       if ( ( FinalState.Leptons().size() == 2 ) &&
 	   ( FinalState.Leptons().at(0).charge() + FinalState.Leptons().at(1).charge() != 0 ) ) {
 	auto pdgsum = FinalState.Leptons().at(0).pdgId() + FinalState.Leptons().at(1).pdgId();
+	std::cout << pdgsum << std::endl;
 	if ( pdgsum == 22 ) { FinalState.Set_ee(true); }
 	if ( pdgsum == 24 ) { FinalState.Set_eu(true); }
 	if ( pdgsum == 26 ) { FinalState.Set_uu(true); }
@@ -98,6 +101,11 @@ void mAIDA::Swizzler::Loop()
     if ( _osdilepton ) {
       if ( ( FinalState.Leptons().size() == 2 ) &&
 	   ( FinalState.Leptons().at(0).charge() + FinalState.Leptons().at(1).charge() == 0 ) ) {
+	auto pdgsum = FinalState.Leptons().at(0).pdgId() + FinalState.Leptons().at(1).pdgId();
+	std::cout << pdgsum << std::endl;
+	if ( pdgsum == 22 ) { FinalState.Set_ee(true); }
+	if ( pdgsum == 24 ) { FinalState.Set_eu(true); }
+	if ( pdgsum == 26 ) { FinalState.Set_uu(true); }
 	FinalState.SetInteractionType("osdilepton");
 	_out_tree->Fill();
       }
