@@ -89,7 +89,6 @@ void mAIDA::Swizzler::Loop()
       if ( ( FinalState.Leptons().size() == 2 ) &&
 	   ( FinalState.Leptons().at(0).charge() + FinalState.Leptons().at(1).charge() != 0 ) ) {
 	auto pdgsum = FinalState.Leptons().at(0).pdgId() + FinalState.Leptons().at(1).pdgId();
-	std::cout << pdgsum << std::endl;
 	if ( pdgsum == 22 ) { FinalState.Set_ee(true); }
 	if ( pdgsum == 24 ) { FinalState.Set_eu(true); }
 	if ( pdgsum == 26 ) { FinalState.Set_uu(true); }
@@ -102,7 +101,6 @@ void mAIDA::Swizzler::Loop()
       if ( ( FinalState.Leptons().size() == 2 ) &&
 	   ( FinalState.Leptons().at(0).charge() + FinalState.Leptons().at(1).charge() == 0 ) ) {
 	auto pdgsum = FinalState.Leptons().at(0).pdgId() + FinalState.Leptons().at(1).pdgId();
-	std::cout << pdgsum << std::endl;
 	if ( pdgsum == 22 ) { FinalState.Set_ee(true); }
 	if ( pdgsum == 24 ) { FinalState.Set_eu(true); }
 	if ( pdgsum == 26 ) { FinalState.Set_uu(true); }
