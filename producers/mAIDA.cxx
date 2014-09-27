@@ -16,26 +16,29 @@ int main(int argc, char *argv[])
 {
   // first we set up the how to handle the CL arguments
   // (google boost program options for info on this library)
-  boost::program_options::options_description desc("mAIDA");
+  namespace bpo = boost::program_options;
+
+  bpo::options_description desc("mAIDA");
   desc.add_options()
     ("help,h",      "Print help message")
     ("fst,f",       "flag to make final state tree (swizzle),\nrequires data-dir, out-file, and 1 of the n-leptons flags (see below)")
     ("var-tree,v",  "flag to make variable tree, requires in-file, out-file")
     ("mva,m",       "flag to run the mva, requires out-file, signal, blackgrounds, and a method (see below)")
-    ("data-dir,d",  boost::program_options::value<std::string>(),"Directory containing ROOT files (required for -f)")
-    ("out-file,o",  boost::program_options::value<std::string>(),"Output ROOT file name (always required)")
-    ("in-file,i",   boost::program_options::value<std::string>(),"Input ROOT file name (required for var-tree)")
-    ("sig,s",       boost::program_options::value<std::string>(),"sig ROOT file required for mva")
-    ("bkgs,b",      boost::program_options::value< std::vector<std::string> >()->multitoken(), "background ROOT files required for mva")
+    ("data-dir,d",  bpo::value<std::string>(),"Directory containing ROOT files (required for -f)")
+    ("out-file,o",  bpo::value<std::string>(),"Output ROOT file name (always required)")
+    ("in-file,i",   bpo::value<std::string>(),"Input ROOT file name (required for var-tree)")
+    ("sig,s",       bpo::value<std::string>(),"sig ROOT file required for mva")
+    ("bkgs,b",      bpo::value< std::vector<std::string> >()->multitoken(), "background ROOT files required for mva")
     ("ssdilepton",  "flag for same sign dilepton events")
     ("osdilepton",  "flag for opposite sign dilepton events")
     ("trilepton",   "flag for trilepton events")
     ("fourlepton",  "flag for fourlepton events")
-    ("mva-methods", boost::program_options::value<std::vector<std::string> >()->multitoken(),"MVA Methods to use (e.g. BDT, ANN)");
-
-  boost::program_options::variables_map vm;
-  boost::program_options::store(boost::program_options::parse_command_line(argc,argv,desc),vm);
-  boost::program_options::notify(vm);
+    ("mva-methods", bpo::value<std::vector<std::string> >()->multitoken(),"MVA Methods to use (e.g. BDT, ANN)")
+    ("wbe",         "flag to weight MVA ntuples by n-entries");
+  
+  bpo::variables_map vm;
+  bpo::store(bpo::parse_command_line(argc,argv,desc),vm);
+  bpo::notify(vm);
 
   // if the fst flag was used
   if ( vm.count("fst") ) {
@@ -100,6 +103,16 @@ int main(int argc, char *argv[])
     for ( auto const& ibkg : vm["bkgs"].as< std::vector<std::string> >() )
       sb_set.add_bkg(ibkg,ibkg.c_str(),"mvavartree",1.0);
 
+    // if weight-by-entries flag
+    if ( vm.count("wbe") ) sb_set.weight_by_entries();
+    
+    std::cout << sb_set.sig_tree()->GetEntries() << " " << sb_set.sig_weight() << " " 
+	      << sb_set.sig_tree()->GetEntries()*sb_set.sig_weight() << std::endl;
+    for ( auto const& sample : sb_set.bkg_trees() ) {
+      std::cout << sample.second->GetEntries() << " " << sb_set.bkg_weights().at(sample.first) << " "
+		<< sb_set.bkg_weights().at(sample.first)*sample.second->GetEntries() << std::endl;
+    }
+    
     TFile *TMVAFile        = new TFile(vm["out-file"].as<std::string>().c_str(),"RECREATE");
     TMVA::Factory *factory = new TMVA::Factory("TMVAClassification",TMVAFile,
 					       "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification");

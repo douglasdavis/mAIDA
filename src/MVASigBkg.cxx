@@ -12,7 +12,7 @@ namespace mAIDA {
 
   // ___________________________________________________________________________________________________
 
-  void MVASigBkg::set_sig(const std::string& name, const char* file, const char* tree, const double weight)
+  void MVASigBkg::set_sig(const std::string& name, const char* file, const char* tree, const float weight)
   {
     _sig_file   = new TFile(file);
     _sig_tree   = dynamic_cast<TTree*>(_sig_file->Get(tree));
@@ -22,7 +22,7 @@ namespace mAIDA {
 
   // ___________________________________________________________________________________________________
 
-  void MVASigBkg::add_bkg(const std::string& name, const char* file, const char* tree, const double weight)
+  void MVASigBkg::add_bkg(const std::string& name, const char* file, const char* tree, const float weight)
   {
     _bkg_files[name]   = new TFile(file);
     _bkg_trees[name]   = dynamic_cast<TTree*>(_bkg_files.at(name)->Get(tree));
@@ -34,9 +34,31 @@ namespace mAIDA {
   void MVASigBkg::add_bkg_to_factory(TMVA::Factory *f)
   {
     for ( auto const& tree : _bkg_trees )
-      f->AddBackgroundTree(tree.second,_bkg_weights.at(tree.first));
+      f->AddBackgroundTree(tree.second,_bkg_weights.at(tree.first));    
   }
+  
+  // ___________________________________________________________________________________________________
 
+  
+  void MVASigBkg::weight_by_entries()
+  {
+    Long64_t min_entries = 1000000;
+    if ( _sig_tree->GetEntries() < min_entries ) min_entries = _sig_tree->GetEntries();
+    
+    for ( auto const& w : _bkg_trees ) {
+      if ( w.second->GetEntries() < min_entries ) {
+	min_entries = w.second->GetEntries();
+      } else {
+	continue;
+      }
+    }
+    
+    _sig_weight = (float)min_entries/_sig_tree->GetEntries();
+    
+    for ( auto const& w : _bkg_weights )
+      _bkg_weights[w.first] = (float)min_entries/_bkg_trees[w.first]->GetEntries();
+  }
+  
   // ___________________________________________________________________________________________________
 
   std::vector<TH1F*> MVASigBkg::hist_set(const std::string& var_name, const char* title,
