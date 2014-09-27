@@ -42,9 +42,10 @@ namespace mAIDA {
 
     void set_sig(const std::string& name, const char* file, const char* tree, const float weight);
     void add_bkg(const std::string& name, const char* file, const char* tree, const float weight);
-    void weight_by_entries();
+
+    void weight_by_entries();                  //!< weight each sample by the minimum entries (each sample contributes evenly)
     
-    void add_bkg_to_factory(TMVA::Factory *f);
+    void add_bkg_to_factory(TMVA::Factory *f); //!< adds all of the background samples to the TMVA factory
   
     std::vector<TH1F*> hist_set(const std::string& var_name, const char* title,
 				const int n_bins, const float x_min, const float x_max,
