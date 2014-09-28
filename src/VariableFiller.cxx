@@ -20,6 +20,10 @@ void mAIDA::VariableFiller::Loop(const char* fname)
   TFile *ofile      = new TFile(fname,"RECREATE");
   TTree *mvavartree = new TTree("mvavartree","mvavartree");
 
+  int   is_ee;
+  int   is_eu;
+  int   is_uu;
+  
   float MET;
   float ht;
   float ht_jets;
@@ -44,7 +48,7 @@ void mAIDA::VariableFiller::Loop(const char* fname)
 
   float m_leptons;
   float m_jets;
-    
+  
   mvavartree->Branch("MET",    &MET,    "MET/F");
   mvavartree->Branch("ht",     &ht,     "ht/F");
   mvavartree->Branch("ht_jets",&ht_jets,"ht_jets/F");
@@ -69,11 +73,27 @@ void mAIDA::VariableFiller::Loop(const char* fname)
 
   mvavartree->Branch("m_leptons",&m_leptons,"m_leptons/F");
   mvavartree->Branch("m_jets",   &m_jets,   "m_jets/F");
-    
+
+  mvavartree->Branch("is_ee",&is_ee,"is_ee/I");
+  mvavartree->Branch("is_eu",&is_eu,"is_eu/I");
+  mvavartree->Branch("is_uu",&is_uu,"is_uu/I");
+  
   // ________________________________________________________________________________
     
   // loop over each final state
   for ( auto ifs = 0; ifs < _in_tree->GetEntries(); ++ifs ) {      
+
+    // these vars need to be set to zero at the beginning
+    // of each iteration because they are summed up or they are 0/1 flag
+    njets_b = 0;
+    ht      = 0;
+    ht_jets = 0;
+    is_ee = 0;
+    is_eu = 0;
+    is_uu = 0;
+
+    //________________________________________________________________________________
+
     _in_tree->GetEntry(ifs);
 
     // first we get some easily definable variables
@@ -81,11 +101,13 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     MET     = fs->MET();
     njets   = fs->Jets().size();
 
-    // these vars need to be set to zero at the beginning
-    // of each iteration because they are summed up
-    njets_b = 0;
-    ht      = 0;
-    ht_jets = 0;
+    // lepton flavor combinations,
+    // of course only matters for dilepton
+    // mva can cut on only wanted certain combinations
+    if ( fs->ee() ) is_ee = 1;
+    if ( fs->eu() ) is_eu = 1;
+    if ( fs->uu() ) is_uu = 1;
+    
     //________________________________________________________________________________
       
     // declare particles to be used for
@@ -99,7 +121,7 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     float current_max = -9999;
 
     // loop through all leptons for ll determination and add to ht variable
-    for ( const auto& lep : fs->Leptons() ) {
+    for ( auto const& lep : fs->Leptons() ) {
       ht += lep.pt();
       if ( lep.pt() > current_max ) {
 	current_max = lep.pt();
@@ -109,7 +131,7 @@ void mAIDA::VariableFiller::Loop(const char* fname)
 
     // loop through all leptons again to detemine second lepton
     current_max = -9e10;
-    for ( const auto& lep : fs->Leptons() ) {
+    for ( auto const& lep : fs->Leptons() ) {
       if ( ( lep.pt() > current_max ) && ( lep.pt() < ll.pt() ) ) {
 	current_max = lep.pt();
 	sl = lep;
@@ -131,7 +153,7 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     // loop through all jets for lj determination and add to ht variable
     // and start summing njets_b
     current_max = -9e10;
-    for ( const auto& jet : fs->Jets() ) {
+    for ( auto const& jet : fs->Jets() ) {
       float temp_m = jet.four_vector().M();
       ht_jets += std::sqrt(temp_m*temp_m + jet.pt()*jet.pt()); // sqrt(pT^2 + m^2)
       ht      += jet.pt();
@@ -146,7 +168,7 @@ void mAIDA::VariableFiller::Loop(const char* fname)
 
     // loop through all jets again to determine second jet
     current_max = -9e10;
-    for ( const auto& jet : fs->Jets() ) {
+    for ( auto const& jet : fs->Jets() ) {
       if ( ( jet.pt() > current_max ) && ( jet.pt() < lj.pt() ) ) {
 	current_max = jet.pt();
 	sj = jet;
@@ -218,8 +240,8 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     }
     if ( fs->Jets().size() > 3 ) {
       std::vector<float> jet_dRs;
-      for ( const auto& j1 : fs->Jets() ) {
-	for ( const auto& j2 : fs->Jets() ) {
+      for ( auto const& j1 : fs->Jets() ) {
+	for ( auto const& j2 : fs->Jets() ) {
 	  if ( j1.eta() != j2.eta() ) {
 	    if ( std::find(jet_dRs.begin(),jet_dRs.end(),
 			   j1.four_vector().DeltaR(j2.four_vector())) != jet_dRs.end() ) {
@@ -234,7 +256,7 @@ void mAIDA::VariableFiller::Loop(const char* fname)
 
 	// now do the average dR for jets when Njets > 3
       float temp_sum = 0;
-      for ( const auto& dritr : jet_dRs )
+      for ( auto const& dritr : jet_dRs )
 	temp_sum += dritr;
       dR_avg_j = temp_sum/(float)jet_dRs.size();
     }
@@ -242,13 +264,13 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     // loops to calculate invariant mass of leptons and jets
     TLorentzVector all_leptons_4v;
     TLorentzVector all_jets_4v;
-    for ( const auto& lep : fs->Leptons() )
+    for ( auto const& lep : fs->Leptons() )
       all_leptons_4v += lep.four_vector();
-    for ( const auto& jet : fs->Jets() )
+    for ( auto const& jet : fs->Jets() )
       all_jets_4v += jet.four_vector();
     m_leptons = all_leptons_4v.M();
     m_jets    = all_jets_4v.M();
-      
+    
     mvavartree->Fill();
       
   }
