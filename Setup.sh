@@ -3,7 +3,10 @@
 # mAIDA bash script to setup env
 
 user=`whoami`
-if [ `whoami` == 'drd25' ]; then
+
+hoststring=`hostname`
+if [[ $hoststring == *atl* ]]
+then
     setupATLAS
     # using root version 5.34.13 on the SLC6 machines because
     # i know it runs TMVA smoothly and doesnt have the
