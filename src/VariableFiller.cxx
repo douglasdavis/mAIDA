@@ -35,11 +35,6 @@ void mAIDA::VariableFiller::Loop(const char* fname)
   float lj_pt;
   float sj_pt;
 
-  float ll_eta;
-  float sl_eta;
-  float lj_eta;
-  float sj_eta;
-
   float dR_ll_sl;
   float dR_lj_sj;
 
@@ -60,11 +55,6 @@ void mAIDA::VariableFiller::Loop(const char* fname)
   mvavartree->Branch("lj_pt",&lj_pt,"lj_pt/F");
   mvavartree->Branch("sj_pt",&sj_pt,"sj_pt/F");
     
-  mvavartree->Branch("ll_eta",&ll_eta,"ll_eta/F");
-  mvavartree->Branch("sl_eta",&sl_eta,"sl_eta/F");
-  mvavartree->Branch("lj_eta",&lj_eta,"lj_eta/F");
-  mvavartree->Branch("sj_eta",&sj_eta,"sj_eta/F");
-
   mvavartree->Branch("dR_ll_sl",&dR_ll_sl,"dR_ll_sl/F");
   mvavartree->Branch("dR_lj_sj",&dR_lj_sj,"dR_lj_sj/F");
 
@@ -78,8 +68,6 @@ void mAIDA::VariableFiller::Loop(const char* fname)
   mvavartree->Branch("is_eu",&is_eu,"is_eu/I");
   mvavartree->Branch("is_uu",&is_uu,"is_uu/I");
   
-  // ________________________________________________________________________________
-    
   // loop over each final state
   for ( auto ifs = 0; ifs < _in_tree->GetEntries(); ++ifs ) {      
 
@@ -88,11 +76,10 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     njets_b = 0;
     ht      = 0;
     ht_jets = 0;
+
     is_ee = 0;
     is_eu = 0;
     is_uu = 0;
-
-    //________________________________________________________________________________
 
     _in_tree->GetEntry(ifs);
 
@@ -108,8 +95,6 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     if ( fs->eu() ) is_eu = 1;
     if ( fs->uu() ) is_uu = 1;
     
-    //________________________________________________________________________________
-      
     // declare particles to be used for
     // tree entries
     mAIDA::Lepton ll; // leading lepton
@@ -185,15 +170,8 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     lj_pt = lj.pt();
     sj_pt = sj.pt();
 
-    ll_eta = ll.eta();
-    sl_eta = sl.eta();
-    lj_eta = lj.eta();
-    sj_eta = sj.eta();
-
     dR_ll_sl = ll.four_vector().DeltaR(sl.four_vector());
     dR_lj_sj = ll.four_vector().DeltaR(sj.four_vector());
-      
-    //________________________________________________________________________________
       
     // determine dR_avg_l using the
     // size of the lepton vector
@@ -272,7 +250,7 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     m_jets    = all_jets_4v.M();
     
     mvavartree->Fill();
-      
+
   }
     
   mvavartree->Write();

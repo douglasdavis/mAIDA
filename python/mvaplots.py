@@ -10,6 +10,7 @@ parser = argparse.ArgumentParser(description='Plotting from MVA output')
 parser.add_argument('-i','--in-file', help='input MVA ROOT file',        required=True)
 parser.add_argument('-v','--var-file',help='variables list file to plot',required=True)
 parser.add_argument('-m','--method',  help='the MVA method used',        required=True)
+parser.add_argument('-a','--all',     help='plot all vars',              required=False)
 args = vars(parser.parse_args())
 
 var_file  = open(args['var_file'])
@@ -78,12 +79,13 @@ L_legend.Draw('same')
 
 c_MVA_train.SaveAs('c_MVA_train'+method+'.eps')
 
-cs = [ROOT.TCanvas('c_'+name,'c_'+name) for name in var_list]
-for i in xrange(len(cs)):
-    cs[i].cd()
-    pystyle.normalize_hists(SignalVarsOutput[i],BackgroundVarsOutput[i])
-    SignalVarsOutput[i].Draw('hist')
-    BackgroundVarsOutput[i].Draw('hist,same')
-    cs[i].SaveAs('c_'+var_list[i]+'.eps')
+if args['all']:
+    cs = [ROOT.TCanvas('c_'+name,'c_'+name) for name in var_list]
+    for i in xrange(len(cs)):
+        cs[i].cd()
+        pystyle.normalize_hists(SignalVarsOutput[i],BackgroundVarsOutput[i])
+        SignalVarsOutput[i].Draw('hist')
+        BackgroundVarsOutput[i].Draw('hist,same')
+        cs[i].SaveAs('c_'+var_list[i]+'.eps')
     
 raw_input('')
