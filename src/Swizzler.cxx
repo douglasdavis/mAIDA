@@ -81,6 +81,9 @@ void mAIDA::Swizzler::Loop()
       } // if pass all the cuts (see 7 TeV AIDA PRD)
     } // for all jets
 
+    // set other final state private variables
+    FinalState.EvaluateSelf();
+
     // set the MET for the event
     FinalState.Set_MET(MET_RefFinal_tightpp_sumet);
     

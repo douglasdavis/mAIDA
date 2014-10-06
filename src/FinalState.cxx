@@ -16,5 +16,24 @@ namespace mAIDA {
   {}
   
   FinalState::~FinalState() {}
-
+  
+  void FinalState::EvaluateSelf()
+  {
+    float compare_pt = 0;
+    for ( auto const& lepton : _Leptons ) {
+      if ( lepton.pt() > compare_pt ) {
+	_LeadingLepton = lepton;
+	compare_pt = lepton.pt();
+      }
+    }
+    
+    compare_pt = 0;
+    for ( auto const& jet : _Jets) {
+      if ( jet.pt() > compare_pt ) {
+	_LeadingJet = jet;
+	compare_pt = jet.pt();
+      }
+    }
+  }
+  
 }
