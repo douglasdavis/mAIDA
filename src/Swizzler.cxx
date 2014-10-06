@@ -85,7 +85,7 @@ void mAIDA::Swizzler::Loop()
     // set the MET for the event
     FinalState.Set_MET(MET_RefFinal_tightpp_sumet);
     
-    if ( ( FinalState.Leptons().size() > 0 ) && ( FinalState.Leptons().size() < 5 ) )
+    if ( ( FinalState.Leptons().size() > 1 ) && ( FinalState.Leptons().size() < 5 ) )
       _out_tree->Fill();
     
     FinalState.ClearVecs();
