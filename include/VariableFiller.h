@@ -25,6 +25,8 @@ namespace mAIDA {
     TFile* _in_file;
     TTree* _in_tree;
 
+    bool _ss, _os, _tri, _four;
+
     ClassDef(VariableFiller,1);
 
   public:
@@ -33,14 +35,28 @@ namespace mAIDA {
     {
       _in_file = new TFile(name);
       _in_tree = (TTree*)_in_file->Get("finalstates");
+      _ss   = false;
+      _os   = false;
+      _tri  = false;
+      _four = false;
     }
     
     virtual ~VariableFiller() {}
+
+    void set_ss();
+    void set_os();
+    void set_tri();
+    void set_four();
 
     void Loop(const char* fname);
     
   };
 
 }
+
+inline void mAIDA::VariableFiller::set_ss()   { _ss   = true; }
+inline void mAIDA::VariableFiller::set_os()   { _os   = true; }
+inline void mAIDA::VariableFiller::set_tri()  { _tri  = true; }
+inline void mAIDA::VariableFiller::set_four() { _four = true; }
 
 #endif

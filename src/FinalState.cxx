@@ -9,10 +9,7 @@
 namespace mAIDA {
   
   FinalState::FinalState() :
-    _MET(-999),
-    _ee(false),
-    _eu(false),
-    _uu(false)
+    _MET(-999)
   {}
   
   FinalState::~FinalState() {}

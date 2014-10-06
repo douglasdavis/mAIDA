@@ -23,16 +23,12 @@ namespace mAIDA {
 
   private:
 
-    std::string                _InteractionType;  ///< ssdi, osdi, tri, four lepton
     std::vector<mAIDA::Jet>    _Jets;             ///< all passing jets
     std::vector<mAIDA::Lepton> _Leptons;          ///< all passing leptons
     mAIDA::Jet                 _LeadingJet;       ///< highest p_T jet
     mAIDA::Lepton              _LeadingLepton;    ///< highest p_T lepton
     float                      _MET;              ///< Missing E_T
-    bool                       _ee;               ///< true if dilepton both electrons
-    bool                       _eu;               ///< true if dilepton electron, muon
-    bool                       _uu;               ///< true if dilepton both muons
-    
+
     ClassDef(FinalState,2);
     
   public:
@@ -40,51 +36,32 @@ namespace mAIDA {
     FinalState();
     virtual ~FinalState();
 
-    void SetInteractionType(const std::string name); //!< set the type, ssdi,osdi,tri,four lepton
     void AddLepton(const mAIDA::Lepton& lepton);     //!< add a lepton
     void AddJet(const mAIDA::Jet& jet);              //!< add a jet
     void EvaluateSelf();                             //!< figures out other private variables from other vars
     void ClearVecs();                                //!< clear the jet and lepton vectors
     void Set_MET(const float i);                     //!< set the missing E_T
-    void Set_ee(const bool i);                       //!< set boolean for 2 electrons
-    void Set_eu(const bool i);                       //!< set boolean for electron, muon
-    void Set_uu(const bool i);                       //!< set boolean for 2 muons
-    void Falsify();                                  //!< sets all flavor combinations to false
 
-    const std::string&                InteractionType() const; //!< getter for type
     const std::vector<mAIDA::Lepton>& Leptons()         const; //!< getter for lepton vector
     const std::vector<mAIDA::Jet>&    Jets()            const; //!< getter for jet vector
     const mAIDA::Lepton&              LeadingLepton()   const; //!< getter for leading lepton
     const mAIDA::Jet&                 LeadingJet()      const; //!< getter for leading jet
 
     float MET() const;  //!< getter for missing E_T
-    bool  ee()  const;  //!< getter for 2 electron bool
-    bool  eu()  const;  //!< getter for electron, muon bool
-    bool  uu()  const;  //!< getter for 2 muon bool
     
   };
 
 }
 
-inline void mAIDA::FinalState::SetInteractionType(const std::string name) { _InteractionType = name;               }
 inline void mAIDA::FinalState::AddLepton(const mAIDA::Lepton& lepton)     { _Leptons.push_back(lepton);            }
 inline void mAIDA::FinalState::AddJet(const mAIDA::Jet& jet)              { _Jets.push_back(jet);                  }
 inline void mAIDA::FinalState::ClearVecs()                                { _Leptons.clear(); _Jets.clear();       }
 inline void mAIDA::FinalState::Set_MET(const float i)                     { _MET = i;                              }
-inline void mAIDA::FinalState::Set_ee(const bool i)                       { _ee  = i;                              }
-inline void mAIDA::FinalState::Set_eu(const bool i)                       { _eu  = i;                              }
-inline void mAIDA::FinalState::Set_uu(const bool i)                       { _uu  = i;                              }
-inline void mAIDA::FinalState::Falsify()                                  { _ee = false; _eu = false; _uu = false; }
 
-inline const std::string&                mAIDA::FinalState::InteractionType() const { return _InteractionType; }
 inline const std::vector<mAIDA::Lepton>& mAIDA::FinalState::Leptons()         const { return _Leptons;         }
 inline const std::vector<mAIDA::Jet>&    mAIDA::FinalState::Jets()            const { return _Jets;            }
 inline const mAIDA::Lepton&              mAIDA::FinalState::LeadingLepton()   const { return _LeadingLepton;   }
 inline const mAIDA::Jet&                 mAIDA::FinalState::LeadingJet()      const { return _LeadingJet;      }
 inline       float                       mAIDA::FinalState::MET()             const { return _MET;             }
-inline       bool                        mAIDA::FinalState::ee()              const { return _ee;              }
-inline       bool                        mAIDA::FinalState::eu()              const { return _eu;              }
-inline       bool                        mAIDA::FinalState::uu()              const { return _uu;              }
-
 
 #endif //* mAIDA_FinalState_h *//

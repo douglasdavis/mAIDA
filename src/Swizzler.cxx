@@ -28,10 +28,8 @@ void mAIDA::Swizzler::Loop()
   
   for ( auto eventid = 0; eventid < nentries; ++eventid ) {
 
-    FinalState.Falsify();
-    
     fRealChain->GetEntry(eventid);
-    if ( eventid%1000 == 0 ) std::cout << "Event: " << eventid << std::endl;
+    if ( eventid%10000 == 0 ) std::cout << "Event: " << eventid << std::endl;
 
     for ( auto iel = 0; iel < el_n; ++iel ) {
       if ( mAIDA::good_el(el_tight->at(iel),el_pt->at(iel),el_eta->at(iel),
@@ -87,45 +85,9 @@ void mAIDA::Swizzler::Loop()
     // set the MET for the event
     FinalState.Set_MET(MET_RefFinal_tightpp_sumet);
     
-    // now we do some if statements so we fill the tree with only what we want
-    if ( _ssdilepton ) {
-      if ( ( FinalState.Leptons().size() == 2 ) &&
-	   ( FinalState.Leptons().at(0).charge() + FinalState.Leptons().at(1).charge() != 0 ) ) {
-	auto pdgsum = FinalState.Leptons().at(0).pdgId() + FinalState.Leptons().at(1).pdgId();
-	if ( pdgsum == 22 ) { FinalState.Set_ee(true); }
-	if ( pdgsum == 24 ) { FinalState.Set_eu(true); }
-	if ( pdgsum == 26 ) { FinalState.Set_uu(true); }
-	FinalState.SetInteractionType("ssdilepton");
-	_out_tree->Fill();
-      }
-    }
+    if ( ( FinalState.Leptons().size() > 0 ) && ( FinalState.Leptons().size() < 5 ) )
+      _out_tree->Fill();
     
-    if ( _osdilepton ) {
-      if ( ( FinalState.Leptons().size() == 2 ) &&
-	   ( FinalState.Leptons().at(0).charge() + FinalState.Leptons().at(1).charge() == 0 ) ) {
-	auto pdgsum = FinalState.Leptons().at(0).pdgId() + FinalState.Leptons().at(1).pdgId();
-	if ( pdgsum == 22 ) { FinalState.Set_ee(true); }
-	if ( pdgsum == 24 ) { FinalState.Set_eu(true); }
-	if ( pdgsum == 26 ) { FinalState.Set_uu(true); }
-	FinalState.SetInteractionType("osdilepton");
-	_out_tree->Fill();
-      }
-    }
-
-    if ( _trilepton ) {
-      if ( FinalState.Leptons().size() == 3 ) {
-	FinalState.SetInteractionType("trilepton");
-	_out_tree->Fill();
-      }
-    }
-    
-    if ( _fourlepton ) {
-      if ( FinalState.Leptons().size() == 4 ) {
-	FinalState.SetInteractionType("fourlepton");
-	_out_tree->Fill();
-      }
-    }
-
     FinalState.ClearVecs();
     
   } // for all events

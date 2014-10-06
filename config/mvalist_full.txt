@@ -5,3 +5,7 @@ ht		MeV	F
 ht_jets		MeV	F
 m_jets		MeV	F
 m_leptons	MeV	F
+dPhi_ll_lj	arb	F
+dPhi_sl_lj	arb	F
+dR_ll_lj	arb	F
+dR_sl_lj	arb	F

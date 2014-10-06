@@ -21,8 +21,8 @@ int main(int argc, char *argv[])
   bpo::options_description desc("mAIDA");
   desc.add_options()
     ("help,h",      "Print help message")
-    ("fst,f",       "flag to make final state tree (swizzle),\nrequires data-dir, out-file, and 1 of the n-leptons flags (see below)")
-    ("var-tree,v",  "flag to make variable tree, requires in-file, out-file")
+    ("fst,f",       "flag to make final state tree (swizzle),\nrequires data-dir, out-file")
+    ("var-tree,v",  "flag to make variable tree, requires in-file, out-file, and nleptons flag")
     ("mva,m",       "flag to run the mva, requires out-file, signal, blackgrounds, and a method (see below)")
     ("data-dir,d",  bpo::value<std::string>(),"Directory containing ROOT files (required for -f)")
     ("out-file,o",  bpo::value<std::string>(),"Output ROOT file name (always required)")
@@ -49,20 +49,9 @@ int main(int argc, char *argv[])
       return 0;
     }
 
-    if ( !vm.count("ssdilepton") && !vm.count("osdilepton") &&
-	 !vm.count("trilepton")  && !vm.count("fourlepton") ) {
-      std::cout << desc << std::endl;
-      return 0;
-    }
-
     mAIDA::Swizzler swizz(vm["out-file"].as<std::string>().c_str(),"finalstates");
     std::string files = vm["data-dir"].as<std::string>() + "/*.root*";
     swizz.AddFile(files.c_str());
-
-    if ( vm.count("trilepton")  ) swizz.Make_trilepton();
-    if ( vm.count("fourlepton") ) swizz.Make_fourlepton();
-    if ( vm.count("ssdilepton") ) swizz.Make_ssdilepton();
-    if ( vm.count("osdilepton") ) swizz.Make_osdilepton();
 
     swizz.Loop();
     return 0;
@@ -77,8 +66,20 @@ int main(int argc, char *argv[])
       std::cout << desc << std::endl;
       return 0;
     }
+    
+    if ( !vm.count("ssdilepton") && !vm.count("osdilepton") &&
+	 !vm.count("trilepton")  && !vm.count("fourlepton") ) {
+      std::cout << desc << std::endl;
+      return 0;
+    }
 
     mAIDA::VariableFiller vf(vm["in-file"].as<std::string>().c_str());
+    
+    if ( vm.count("ssdilepton") ) vf.set_ss();
+    if ( vm.count("ssdilepton") ) vf.set_os();
+    if ( vm.count("trilepton")  ) vf.set_tri();
+    if ( vm.count("fourlepton") ) vf.set_four();
+    
     vf.Loop(vm["out-file"].as<std::string>().c_str());
     return 0;
 

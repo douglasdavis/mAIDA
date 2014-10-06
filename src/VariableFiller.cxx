@@ -35,8 +35,13 @@ void mAIDA::VariableFiller::Loop(const char* fname)
   float lj_pt;
   float sj_pt;
 
+  float dR_ll_lj;
+  float dR_sl_lj;
   float dR_ll_sl;
   float dR_lj_sj;
+
+  float dPhi_ll_lj;
+  float dPhi_sl_lj;
 
   float dR_avg_l;
   float dR_avg_j;
@@ -54,9 +59,14 @@ void mAIDA::VariableFiller::Loop(const char* fname)
   mvavartree->Branch("sl_pt",&sl_pt,"sl_pt/F");
   mvavartree->Branch("lj_pt",&lj_pt,"lj_pt/F");
   mvavartree->Branch("sj_pt",&sj_pt,"sj_pt/F");
-    
+
+  mvavartree->Branch("dR_ll_lj",&dR_ll_lj,"dR_ll_lj/F");
+  mvavartree->Branch("dR_sl_lj",&dR_sl_lj,"dR_sl_lj/F");
   mvavartree->Branch("dR_ll_sl",&dR_ll_sl,"dR_ll_sl/F");
   mvavartree->Branch("dR_lj_sj",&dR_lj_sj,"dR_lj_sj/F");
+
+  mvavartree->Branch("dPhi_ll_lj",&dPhi_ll_lj,"dPhi_ll_lj/F");
+  mvavartree->Branch("dPhi_sl_lj",&dPhi_sl_lj,"dPhi_sl_lj/F");
 
   mvavartree->Branch("dR_avg_l",&dR_avg_l,"dR_avg_l/F");
   mvavartree->Branch("dR_avg_j",&dR_avg_j,"dR_avg_j/F");
@@ -91,10 +101,8 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     // lepton flavor combinations,
     // of course only matters for dilepton
     // mva can cut on only wanted certain combinations
-    if ( fs->ee() ) is_ee = 1;
-    if ( fs->eu() ) is_eu = 1;
-    if ( fs->uu() ) is_uu = 1;
-    
+    // REDO THIS
+        
     // declare particles to be used for
     // tree entries
     mAIDA::Lepton ll; // leading lepton
@@ -172,6 +180,12 @@ void mAIDA::VariableFiller::Loop(const char* fname)
 
     dR_ll_sl = ll.four_vector().DeltaR(sl.four_vector());
     dR_lj_sj = ll.four_vector().DeltaR(sj.four_vector());
+
+    dR_ll_lj = ll.four_vector().DeltaR(lj.four_vector());
+    dR_sl_lj = sl.four_vector().DeltaR(lj.four_vector());
+
+    dPhi_ll_lj = ll.four_vector().DeltaPhi(lj.four_vector());
+    dPhi_sl_lj = sl.four_vector().DeltaPhi(lj.four_vector());
       
     // determine dR_avg_l using the
     // size of the lepton vector
@@ -249,8 +263,36 @@ void mAIDA::VariableFiller::Loop(const char* fname)
     m_leptons = all_leptons_4v.M();
     m_jets    = all_jets_4v.M();
     
-    mvavartree->Fill();
+    auto charge_sum = fs->Leptons().at(0).charge() + fs->Leptons().at(1).charge();
+    auto pdg_sum    = fs->Leptons().at(0).pdgId()  + fs->Leptons().at(1).pdgId();
+    
+    if ( fs->Leptons().size() == 2 ) {
+      if ( pdg_sum == 22 )
+	is_ee = 1;
+      if ( pdg_sum == 24 )
+	is_eu = 1;
+      if ( pdg_sum == 26 )
+	is_uu = 1;
+    }
 
+    if ( _ss )
+      if ( fs->Leptons().size() == 2 )
+	if ( std::fabs(charge_sum) != 0 )
+	  mvavartree->Fill();
+    
+    if ( _os )
+      if ( fs->Leptons().size() == 2 )
+	if ( std::fabs(charge_sum) == 0 )
+	  mvavartree->Fill();
+    
+    if ( _tri )
+      if ( fs->Leptons().size() == 3 )
+	mvavartree->Fill();
+    
+    if ( _four )
+      if ( fs->Leptons().size() == 4 )
+	mvavartree->Fill();
+    
   }
     
   mvavartree->Write();
