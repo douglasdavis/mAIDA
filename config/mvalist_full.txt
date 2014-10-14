@@ -1,11 +1,7 @@
 MET		MeV	F
-njets		arb	I
-njets_b		arb	I
-ht		MeV	F
-ht_jets		MeV	F
-m_jets		MeV	F
-m_leptons	MeV	F
-dPhi_ll_lj	arb	F
-dPhi_sl_lj	arb	F
-dR_ll_lj	arb	F
-dR_sl_lj	arb	F
+N_JETS		arb	I
+N_JETS_B	arb	I
+HT		MeV	F
+HT_LEPTONS	MeV	F
+M_LEPTONS	MeV	F
+M_JETS		MeV	F

@@ -35,10 +35,8 @@ namespace mAIDA {
     {
       _in_file = new TFile(name);
       _in_tree = (TTree*)_in_file->Get("finalstates");
-      _ss   = false;
-      _os   = false;
-      _tri  = false;
-      _four = false;
+      _ss   = false; _os   = false;
+      _tri  = false; _four = false;
     }
     
     virtual ~VariableFiller() {}

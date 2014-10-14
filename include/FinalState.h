@@ -28,7 +28,12 @@ namespace mAIDA {
     mAIDA::Jet                 _LeadingJet;       ///< highest p_T jet
     mAIDA::Lepton              _LeadingLepton;    ///< highest p_T lepton
     float                      _MET;              ///< Missing E_T
-
+    float                      _HT;               ///< sum lepton pt + sum jet pt
+    float                      _HT_jets;          ///< sum jet pt
+    float                      _HT_leptons;       ///< sum lepton pt
+    int                        _pdgIdSum;         ///< sum of Lepton PDG codes
+    float                      _chargeSum;        ///< sum of Lepton charges
+    
     ClassDef(FinalState,2);
     
   public:
@@ -41,27 +46,43 @@ namespace mAIDA {
     void EvaluateSelf();                             //!< figures out other private variables from other vars
     void ClearVecs();                                //!< clear the jet and lepton vectors
     void Set_MET(const float i);                     //!< set the missing E_T
-
+    void Set_HT(const float i);
+    void Set_HT_leptons(const float i);
+    void Set_HT_jets(const float i);
+    
     const std::vector<mAIDA::Lepton>& Leptons()         const; //!< getter for lepton vector
     const std::vector<mAIDA::Jet>&    Jets()            const; //!< getter for jet vector
     const mAIDA::Lepton&              LeadingLepton()   const; //!< getter for leading lepton
     const mAIDA::Jet&                 LeadingJet()      const; //!< getter for leading jet
 
-    float MET() const;  //!< getter for missing E_T
+    float MET()        const;                                  //!< getter for missing E_T
+    float HT()         const;                                  //!< getter for HT
+    float HT_leptons() const;                                  //!< getter for HT_leptons
+    float HT_jets()    const;                                  //!< getter for HT_jets
+    int   pdgIdSum()   const;                                  //!< getter for abs(pdg) sum
+    float chargeSum()  const;                                  //!< getter for charge sum
     
   };
 
 }
 
-inline void mAIDA::FinalState::AddLepton(const mAIDA::Lepton& lepton)     { _Leptons.push_back(lepton);            }
-inline void mAIDA::FinalState::AddJet(const mAIDA::Jet& jet)              { _Jets.push_back(jet);                  }
-inline void mAIDA::FinalState::ClearVecs()                                { _Leptons.clear(); _Jets.clear();       }
-inline void mAIDA::FinalState::Set_MET(const float i)                     { _MET = i;                              }
+inline void mAIDA::FinalState::AddLepton(const mAIDA::Lepton& lepton)     { _Leptons.push_back(lepton);        }
+inline void mAIDA::FinalState::AddJet(const mAIDA::Jet& jet)              { _Jets.push_back(jet);              }
+inline void mAIDA::FinalState::ClearVecs()                                { _Leptons.clear(); _Jets.clear();   }
+inline void mAIDA::FinalState::Set_MET(const float i)                     { _MET = i;                          }
+inline void mAIDA::FinalState::Set_HT(const float i)                      { _HT  = i;                          }
+inline void mAIDA::FinalState::Set_HT_leptons(const float i)              { _HT_leptons = i;                   }
+inline void mAIDA::FinalState::Set_HT_jets(const float i)                 { _HT_jets    = i;                   }
 
 inline const std::vector<mAIDA::Lepton>& mAIDA::FinalState::Leptons()         const { return _Leptons;         }
 inline const std::vector<mAIDA::Jet>&    mAIDA::FinalState::Jets()            const { return _Jets;            }
 inline const mAIDA::Lepton&              mAIDA::FinalState::LeadingLepton()   const { return _LeadingLepton;   }
 inline const mAIDA::Jet&                 mAIDA::FinalState::LeadingJet()      const { return _LeadingJet;      }
 inline       float                       mAIDA::FinalState::MET()             const { return _MET;             }
+inline       float                       mAIDA::FinalState::HT()              const { return _HT;              }
+inline       float                       mAIDA::FinalState::HT_leptons()      const { return _HT_leptons;      }
+inline       float                       mAIDA::FinalState::HT_jets()         const { return _HT_jets;         }
+inline       int                         mAIDA::FinalState::pdgIdSum()        const { return _pdgIdSum;        }
+inline       float                       mAIDA::FinalState::chargeSum()       const { return _chargeSum;       }
 
 #endif //* mAIDA_FinalState_h *//

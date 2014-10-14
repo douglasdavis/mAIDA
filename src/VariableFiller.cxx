@@ -12,6 +12,138 @@
 #include <iostream>
 #include <algorithm>
 
+void mAIDA::VariableFiller::Loop(const char *fname)
+{
+  mAIDA::FinalState *fs = new FinalState();
+  _in_tree->SetBranchAddress("FinalState",&fs);
+
+  TFile *out_file = new TFile(fname,"RECREATE");
+  TTree *out_tree = new TTree("mvavartree","mvavartree");
+
+  // VARIABLES FOR TREE
+  int   IS_EE;
+  int   IS_EU;
+  int   IS_UU; 
+  int   IS_SS;
+  int   IS_OS;
+  int   IS_TRI;
+  int   IS_FOUR;
+  float MET;
+  int   N_JETS;
+  int   N_JETS_B;
+  float HT;
+  float HT_LEPTONS;
+  float HT_JETS;
+  float M_LEPTONS;
+  float M_JETS;
+  
+  out_tree->Branch("IS_EE",  &IS_EE,  "IS_EE/I");
+  out_tree->Branch("IS_EU",  &IS_EU,  "IS_EU/I");
+  out_tree->Branch("IS_UU",  &IS_UU,  "IS_UU/I");
+  out_tree->Branch("IS_SS",  &IS_SS,  "IS_SS/I");
+  out_tree->Branch("IS_OS",  &IS_OS,  "IS_OS/I");
+  out_tree->Branch("IS_TRI", &IS_TRI, "IS_TRI/I");
+  out_tree->Branch("IS_FOUR",&IS_FOUR,"IS_FOUR/I");
+
+  out_tree->Branch("MET",       &MET,       "MET/F");
+  out_tree->Branch("N_JETS",    &N_JETS,    "N_JETS/I");
+  out_tree->Branch("N_JETS_B",  &N_JETS_B,  "N_JETS_B/I");
+  out_tree->Branch("HT",        &HT,        "HT/F");
+  out_tree->Branch("HT_LEPTONS",&HT_LEPTONS,"HT_LEPTONS/F");
+  out_tree->Branch("HT_JETS",   &HT_JETS,   "HT_JETS/F");
+  out_tree->Branch("M_LEPTONS", &M_LEPTONS, "M_LEPTONS/F");
+  out_tree->Branch("M_JETS",    &M_JETS,    "M_JETS/F");
+  
+  for ( auto iev = 0; iev < _in_tree->GetEntries(); ++iev ) {
+    // fetch final state for current event
+    _in_tree->GetEntry(iev);
+
+    // the 0/1 flags for flavors/sgn need to be set to 0 for each iteration
+    IS_EE = 0;
+    IS_EU = 0;
+    IS_UU = 0;
+    IS_SS = 0;
+    IS_OS = 0;
+
+    IS_TRI  = 0;
+    IS_FOUR = 0;
+
+    // 0 flag for counting b-jets
+    N_JETS_B = 0;
+    
+    // do flavoring/signing for dilepton
+    if ( fs->Leptons().size() == 2 ) {
+      if ( fs->chargeSum()       == 0  ) IS_OS = 1;
+      if ( fabs(fs->chargeSum()) == 2  ) IS_SS = 1;
+      if ( fabs(fs->pdgIdSum())  == 22 ) IS_EE = 1;
+      if ( fabs(fs->pdgIdSum())  == 24 ) IS_EU = 1;
+      if ( fabs(fs->pdgIdSum())  == 26 ) IS_UU = 1;
+    }
+    
+    if ( fs->Leptons().size() == 3 ) IS_TRI  = 1;
+    if ( fs->Leptons().size() == 4 ) IS_FOUR = 1;
+    
+    // some immediately available variables straight from final state getters
+    MET        = fs->MET();
+    N_JETS     = fs->Jets().size();
+    HT         = fs->HT();
+    HT_LEPTONS = fs->HT_leptons();
+    HT_JETS    = fs->HT_jets();
+
+    // code to get number of b jets and do four vector combinations
+    TLorentzVector all_leptons_4v;
+    TLorentzVector all_jets_4v;
+    for ( auto const &jet : fs->Jets() ) {
+      all_jets_4v += jet.four_vector();
+      if ( jet.MV1() > 0.7892 ) N_JETS_B++;
+    }
+    for ( auto const &lepton : fs->Leptons() ) {
+      all_leptons_4v += lepton.four_vector();
+    }
+
+    M_JETS    = all_jets_4v.M();
+    M_LEPTONS = all_leptons_4v.M();
+
+    /*
+    // now fill the tree if the proper events
+    if ( _ss ) { 
+      if ( IS_SS == 1 )
+	out_tree->Fill();
+      else
+	continue;
+    }
+    if ( _os ) {
+      if ( IS_OS == 1 )
+	out_tree->Fill();
+      else
+	continue;
+    }
+    if ( _tri )
+      if ( IS_TRI == 1 )
+	out_tree->Fill();
+    if ( _four )
+      if ( IS_FOUR == 1 )
+      out_tree->Fill();
+    */
+    out_tree->Fill();
+    
+  } // all events in tree
+
+  out_tree->Write();
+  out_file->Close();
+  
+} // loop function
+
+
+
+/*
+
+
+
+
+
+
+
 void mAIDA::VariableFiller::Loop(const char* fname)
 {
   mAIDA::FinalState *fs = new mAIDA::FinalState();
@@ -20,6 +152,8 @@ void mAIDA::VariableFiller::Loop(const char* fname)
   TFile *ofile      = new TFile(fname,"RECREATE");
   TTree *mvavartree = new TTree("mvavartree","mvavartree");
 
+  int n_lep;
+  
   int   is_ee;
   int   is_eu;
   int   is_uu;
@@ -48,6 +182,8 @@ void mAIDA::VariableFiller::Loop(const char* fname)
 
   float m_leptons;
   float m_jets;
+
+  mvavartree->Branch("n_lep",&n_lep,"n_lep/I");
   
   mvavartree->Branch("MET",    &MET,    "MET/F");
   mvavartree->Branch("ht",     &ht,     "ht/F");
@@ -80,7 +216,8 @@ void mAIDA::VariableFiller::Loop(const char* fname)
   
   // loop over each final state
   for ( auto ifs = 0; ifs < _in_tree->GetEntries(); ++ifs ) {      
-
+    std::cout << fs->Leptons().size() << std::endl;
+    n_lep = fs->Leptons().size();
     // these vars need to be set to zero at the beginning
     // of each iteration because they are summed up or they are 0/1 flag
     njets_b = 0;
@@ -299,3 +436,4 @@ void mAIDA::VariableFiller::Loop(const char* fname)
   ofile->Close();
     
 }
+*/

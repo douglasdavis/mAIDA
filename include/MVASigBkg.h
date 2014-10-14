@@ -47,13 +47,12 @@ namespace mAIDA {
     
     void add_bkg_to_factory(TMVA::Factory *f); //!< adds all of the background samples to the TMVA factory
   
-    std::vector<TH1F*> hist_set(const std::string& var_name, const char* title,
-				const int n_bins, const float x_min, const float x_max,
-				const float divider);
+    std::vector<TH1F*> hist_set(const std::string& var_name, const char* title, const int n_bins,
+				const float x_min, const float x_max, const float divider);
 
+    const std::string&  sig_name()   const;
     TFile*              sig_file()   const;
     TTree*              sig_tree()   const;
-    const std::string&  sig_name()   const;
     float               sig_weight() const;
 
     const std::map<std::string,TFile*>& bkg_files()   const;

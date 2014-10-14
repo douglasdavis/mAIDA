@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     mAIDA::VariableFiller vf(vm["in-file"].as<std::string>().c_str());
     
     if ( vm.count("ssdilepton") ) vf.set_ss();
-    if ( vm.count("ssdilepton") ) vf.set_os();
+    if ( vm.count("osdilepton") ) vf.set_os();
     if ( vm.count("trilepton")  ) vf.set_tri();
     if ( vm.count("fourlepton") ) vf.set_four();
     
@@ -114,9 +114,12 @@ int main(int argc, char *argv[])
 		<< sb_set.bkg_weights().at(sample.first)*sample.second->GetEntries() << std::endl;
     }
     
+    std::string factory_settings;
+    factory_settings = "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification";
+
     TFile *TMVAFile        = new TFile(vm["out-file"].as<std::string>().c_str(),"RECREATE");
     TMVA::Factory *factory = new TMVA::Factory("TMVAClassification",TMVAFile,
-					       "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification");
+					       factory_settings.c_str());
 
     // make a map which holds the variable name as key, and a mair which is the units and variable type
     // example: name = "ht", units would be "MeV", type would be float, so 'F'
@@ -159,22 +162,30 @@ int main(int argc, char *argv[])
     sb_set.add_bkg_to_factory(factory);
 
     // now we prepare, book, train, test, and evaluate
+    std::string train_test_settings;
+    train_test_settings = "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V";
     factory->PrepareTrainingAndTestTree(sig_cut,bkg_cut,
-					"nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V");
+					train_test_settings.c_str());
 
     auto methods_vector = vm["mva-methods"].as<std::vector<std::string> >();
 
+    std::string BDT_settings, HMatrix_settings, Fisher_settings, MLP_settings;
+    BDT_settings     = "NTrees=400:MaxDepth=2";
+    HMatrix_settings = "H:V";
+    Fisher_settings  = "H:V:Fisher:CreateMVAPdfs:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10";
+    MLP_settings     = "H:V:NeuronType=tanh:VarTransform=N:NCycles=60:HiddenLayers=N+5:TestRate=5:!UseRegulator";
+    
     if ( std::find(methods_vector.begin(), methods_vector.end(), "BDT") != methods_vector.end() )
-      factory->BookMethod(TMVA::Types::kBDT,"BDT","NTrees=400:MaxDepth=2"); 
+      factory->BookMethod(TMVA::Types::kBDT,"BDT",BDT_settings.c_str());
 
     if ( std::find(methods_vector.begin(), methods_vector.end(), "HMatrix") != methods_vector.end() )
-      factory->BookMethod(TMVA::Types::kHMatrix,"HMatrix","H:V");
+      factory->BookMethod(TMVA::Types::kHMatrix,"HMatrix",HMatrix_settings.c_str());
 
     if ( std::find(methods_vector.begin(), methods_vector.end(), "FD") != methods_vector.end() )
-      factory->BookMethod(TMVA::Types::kFisher,"Fisher","H:V:Fisher:CreateMVAPdfs:PDFInterpolMVAPdf=Spline2:NbinsMVAPdf=50:NsmoothMVAPdf=10");
+      factory->BookMethod(TMVA::Types::kFisher,"Fisher",Fisher_settings.c_str());
 
     if ( std::find(methods_vector.begin(), methods_vector.end(), "MLP") != methods_vector.end() )
-      factory->BookMethod(TMVA::Types::kMLP,"MLP","H:V:NeuronType=tanh:VarTransform=N:NCycles=60:HiddenLayers=N+5:TestRate=5:!UseRegulator");
+      factory->BookMethod(TMVA::Types::kMLP,"MLP",MLP_settings.c_str());
 
     factory->TrainAllMethods();
     factory->TestAllMethods();

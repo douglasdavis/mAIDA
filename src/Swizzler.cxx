@@ -11,8 +11,8 @@
 mAIDA::Swizzler::Swizzler(const char *fname, const char* tname)
 {
   fRealChain = new TChain("physics");
-  _out_file = new TFile(fname,"RECREATE");
-  _out_tree = new TTree(tname,tname);
+  _out_file  = new TFile(fname,"RECREATE");
+  _out_tree  = new TTree(tname,tname);
 }
 
 mAIDA::Swizzler::~Swizzler() {}
@@ -26,10 +26,17 @@ void mAIDA::Swizzler::Loop()
   mAIDA::FinalState FinalState;
   _out_tree->Branch("FinalState",&FinalState);
   
+  std::cout << "Event: ";
   for ( auto eventid = 0; eventid < nentries; ++eventid ) {
 
+    float SUM_lepton_pt = 0;
+    float SUM_jet_pt    = 0;
+    
     fRealChain->GetEntry(eventid);
-    if ( eventid%10000 == 0 ) std::cout << "Event: " << eventid << std::endl;
+    if ( eventid%10000 == 0 )
+      std::cout << eventid;
+    if ( eventid%2500  == 0 )
+      std::cout << ".";
 
     for ( auto iel = 0; iel < el_n; ++iel ) {
       if ( mAIDA::good_el(el_tight->at(iel),el_pt->at(iel),el_eta->at(iel),
@@ -46,6 +53,7 @@ void mAIDA::Swizzler::Loop()
 			 el_phi->at(iel),
 			 el_E->at(iel));
 	FinalState.AddLepton(el);
+	SUM_lepton_pt += el_pt->at(iel);
       } // if pass all the cuts (see 7 TeV AIDA PRD)
     } // for all electrons
 
@@ -64,6 +72,7 @@ void mAIDA::Swizzler::Loop()
 			 mu_muid_phi->at(imu),
 			 mu_muid_E->at(imu));
 	FinalState.AddLepton(mu);
+	SUM_lepton_pt += mu_muid_pt->at(imu);
       } // if pass all cuts (see 7 TeV AIDA PRD)
     } // for all muons
 
@@ -76,17 +85,24 @@ void mAIDA::Swizzler::Loop()
 			  jet_AntiKt4LCTopo_E->at(ijet));
 	jet.Set_MV1(jet_AntiKt4LCTopo_flavor_weight_MV1->at(ijet));
 	FinalState.AddJet(jet);
+	SUM_jet_pt += jet_AntiKt4LCTopo_pt->at(ijet);
       } // if pass all the cuts (see 7 TeV AIDA PRD)
     } // for all jets
 
+    FinalState.Set_HT(SUM_jet_pt + SUM_lepton_pt);
+    FinalState.Set_HT_leptons(SUM_lepton_pt);
+    FinalState.Set_HT_jets(SUM_jet_pt);
+    
     // set other final state private variables
     FinalState.EvaluateSelf();
 
     // set the MET for the event
     FinalState.Set_MET(MET_RefFinal_tightpp_sumet);
     
-    if ( ( FinalState.Leptons().size() > 1 ) && ( FinalState.Leptons().size() < 5 ) )
+    if ( FinalState.Leptons().size() > 1 ) {
+      //      std::cout << FinalState.Leptons().size() << std::endl;
       _out_tree->Fill();
+    }
     
     FinalState.ClearVecs();
     
@@ -95,5 +111,5 @@ void mAIDA::Swizzler::Loop()
   // and finally write to the tree
   _out_tree->Write();
   _out_file->Close();
-  
+  std::cout << std::endl << "Done." << std::endl;
 }
