@@ -34,7 +34,9 @@ int main(int argc, char *argv[])
     ("trilepton",   "flag for trilepton events")
     ("fourlepton",  "flag for fourlepton events")
     ("mva-methods", bpo::value<std::vector<std::string> >()->multitoken(),"MVA Methods to use (e.g. BDT, ANN)")
-    ("wbe",         "flag to weight MVA ntuples by n-entries");
+    ("wbe",         "flag to weight MVA ntuples by n-entries")
+    ("var-list,l",  bpo::value<std::string>(),"file which contains variable list for MVA use")
+    ("cut-list,c",  bpo::value<std::string>(),"file which contains cut list for MVA use");
   
   bpo::variables_map vm;
   bpo::store(bpo::parse_command_line(argc,argv,desc),vm);
@@ -94,6 +96,11 @@ int main(int argc, char *argv[])
       return 0;
     }
 
+    if ( !vm.count("var-list") || !vm.count("cut-list") ) {
+      std::cout << desc << std::endl;
+      return 0;
+    }
+
     // setup the sig, bkg manager
     mAIDA::MVASigBkg sb_set;
     sb_set.set_sig(vm["sig"].as<std::string>(),
@@ -124,11 +131,14 @@ int main(int argc, char *argv[])
     // make a map which holds the variable name as key, and a mair which is the units and variable type
     // example: name = "ht", units would be "MeV", type would be float, so 'F'
     // map is filled from var list file of that form in that order
+
+    std::string var_list_file = vm["var-list"].as<std::string>();
+    std::string cut_list_file = vm["cut-list"].as<std::string>();
     std::map<TString, std::pair<TString,char> > varsUsed;
     std::ifstream infile;
     std::string   temp_var, temp_units;
     char          temp_type;
-    infile.open("config/mvalist.txt");
+    infile.open(var_list_file.c_str());
     // fill the map with the contents on the confit file
     while ( infile >> temp_var >> temp_units >> temp_type ) {
       std::cout << temp_var << " " << temp_type << " " << temp_units << " " << temp_type << std::endl;
@@ -147,7 +157,7 @@ int main(int argc, char *argv[])
     // this bit sets of the cuts from the cut config file
     std::string sc1, sc2;
     std::map<std::string,std::string> cuts;
-    infile.open("config/mvacuts.txt");
+    infile.open(cut_list_file.c_str());
     while ( infile >> sc1 >> sc2 )
       cuts[sc1] = sc2;
     std::cout << "Cuts: " << std::endl;
