@@ -21,26 +21,24 @@ int main(int argc, char *argv[])
   bpo::options_description desc("mAIDA");
   desc.add_options()
     ("help,h",      "Print help message")
-    ("fst,f",       "flag to make final state tree (swizzle),\nrequires data-dir, out-file")
-    ("var-tree,v",  "flag to make variable tree, requires in-file, out-file, and nleptons flag")
-    ("mva,m",       "flag to run the mva, requires out-file, signal, blackgrounds, and a method (see below)")
+    ("fst,f",       "flag to make final state tree (swizzle)")
+    ("var-tree,v",  "flag to make variable tree")
+    ("mva,m",       "flag to run the mva")
+    ("wbe,w",       "flag to weight MVA ntuples by n-entries")
     ("data-dir,d",  bpo::value<std::string>(),"Directory containing ROOT files (required for -f)")
     ("out-file,o",  bpo::value<std::string>(),"Output ROOT file name (always required)")
     ("in-file,i",   bpo::value<std::string>(),"Input ROOT file name (required for var-tree)")
     ("sig,s",       bpo::value<std::string>(),"sig ROOT file required for mva")
-    ("bkgs,b",      bpo::value< std::vector<std::string> >()->multitoken(), "background ROOT files required for mva")
-    ("ssdilepton",  "flag for same sign dilepton events")
-    ("osdilepton",  "flag for opposite sign dilepton events")
-    ("trilepton",   "flag for trilepton events")
-    ("fourlepton",  "flag for fourlepton events")
-    ("mva-methods", bpo::value<std::vector<std::string> >()->multitoken(),"MVA Methods to use (e.g. BDT, ANN)")
-    ("wbe",         "flag to weight MVA ntuples by n-entries")
+    ("bkgs,b",      bpo::value<std::vector<std::string> >()->multitoken(), "background ROOT files required for mva")
+    ("methods,e",   bpo::value<std::vector<std::string> >()->multitoken(),"MVA Methods to use (e.g. BDT, ANN)")
     ("var-list,l",  bpo::value<std::string>(),"file which contains variable list for MVA use")
     ("cut-list,c",  bpo::value<std::string>(),"file which contains cut list for MVA use");
   
   bpo::variables_map vm;
   bpo::store(bpo::parse_command_line(argc,argv,desc),vm);
   bpo::notify(vm);
+
+  // _________________________________________________________________________________________________________
 
   // if the fst flag was used
   if ( vm.count("fst") ) {
@@ -60,6 +58,8 @@ int main(int argc, char *argv[])
 
   } // if fst
 
+  // _________________________________________________________________________________________________________
+
   // if the var-tree flag was used
   else if ( vm.count("var-tree") ) {
 
@@ -68,30 +68,20 @@ int main(int argc, char *argv[])
       std::cout << desc << std::endl;
       return 0;
     }
-    
-    if ( !vm.count("ssdilepton") && !vm.count("osdilepton") &&
-	 !vm.count("trilepton")  && !vm.count("fourlepton") ) {
-      std::cout << desc << std::endl;
-      return 0;
-    }
 
-    mAIDA::VariableFiller vf(vm["in-file"].as<std::string>().c_str());
-    
-    if ( vm.count("ssdilepton") ) vf.set_ss();
-    if ( vm.count("osdilepton") ) vf.set_os();
-    if ( vm.count("trilepton")  ) vf.set_tri();
-    if ( vm.count("fourlepton") ) vf.set_four();
-    
+    mAIDA::VariableFiller vf(vm["in-file"].as<std::string>().c_str());    
     vf.Loop(vm["out-file"].as<std::string>().c_str());
     return 0;
 
   } // else if  var-tree
 
+  // _________________________________________________________________________________________________________
+
   // if the mva flag was used
   else if ( vm.count("mva") ) {
 
     // make sure mva required input exists 
-    if ( !vm.count("out-file") || !vm.count("sig") || !vm.count("bkgs") || !vm.count("mva-methods") ) {
+    if ( !vm.count("out-file") || !vm.count("sig") || !vm.count("bkgs") || !vm.count("methods") ) {
       std::cout << desc << std::endl;
       return 0;
     }
@@ -177,7 +167,7 @@ int main(int argc, char *argv[])
     factory->PrepareTrainingAndTestTree(sig_cut,bkg_cut,
 					train_test_settings.c_str());
 
-    auto methods_vector = vm["mva-methods"].as<std::vector<std::string> >();
+    auto methods_vector = vm["methods"].as<std::vector<std::string> >();
 
     std::string BDT_settings, HMatrix_settings, Fisher_settings, MLP_settings;
     BDT_settings     = "NTrees=400:MaxDepth=2";
@@ -203,6 +193,8 @@ int main(int argc, char *argv[])
 
     return 0;
   } // else if mva
+
+  // _________________________________________________________________________________________________________
 
   else {
     std::cout << desc << std::endl;

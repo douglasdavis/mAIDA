@@ -1,0 +1,2 @@
+sig	(N_JETS>1)&&(IS_SS>0)&&(IS_EU>0)
+bkg	(N_JETS>1)&&(IS_SS>0)&&(IS_EU>0)
