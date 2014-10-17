@@ -27,7 +27,7 @@ include_directories("${CMAKE_SOURCE_DIR}")
 include_directories("${CMAKE_SOURCE_DIR}/include")
 
 ROOT_GENERATE_DICTIONARY(
-  mAIDAdict
+  mAIDAlibdict
   include/Reader.h
   include/PhysicsObject.h
   include/Jet.h
@@ -39,17 +39,17 @@ ROOT_GENERATE_DICTIONARY(
   LINKDEF include/LinkDef.h
   )
 
-file(GLOB mAIDA_src
+file(GLOB mAIDAlib_src
   "src/*.cxx"
   )
 
 add_library(
-  mAIDA SHARED
-  ${mAIDA_src}
-  mAIDAdict
+  mAIDAlib SHARED
+  ${mAIDAlib_src}
+  mAIDAlibdict
   )
 
-target_link_libraries(mAIDA ${ROOT_LIBRARIES} TMVA)
+target_link_libraries(mAIDAlib ${ROOT_LIBRARIES} TMVA)
 
 add_subdirectory(producers)
 add_subdirectory(readers)
