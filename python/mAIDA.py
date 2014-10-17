@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+import argparse
+
+import ROOT
+ROOT.gSystem.Load('lib/libmAIDA')
+from ROOT import mAIDA
+
+parser = argparse.ArgumentParser(description='mAIDA python controller')
+parser.add_argument('-f','--fst',
+                    help='flag to make final state tree (swizzle)',
+                    required=False,
+                    action='store_true')
+parser.add_argument('-o','--output-file',
+                    help='output file name',
+                    required=False)
+parser.add_argument('-i','--input-file',
+                    help='input file name',
+                    required=False)
+parser.add_argument('-d','--data-dir',
+                    help='fst data directory',
+                    required=False)
+parser.add_argument('-v','--var-tree',
+                    help='var tree maker',
+                    required=False,
+                    action='store_true')
+
+args    = vars(parser.parse_args())
+args_tf = parser.parse_args()
+
+if args_tf.fst == True:
+    swizzy = mAIDA.Swizzler(args['output_file'],'finalstates')
+    swizzy.AddFile(args['data_dir']+'/*.root')
+    swizzy.Loop()
+
+if args_tf.var_tree == True:
+    vf = mAIDA.VariableFiller(args['input_file'],args['output_file'])
+    vf.Loop()
