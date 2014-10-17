@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
       return 0;
     }
 
-    mAIDA::VariableFiller vf(vm["in-file"].as<std::string>().c_str());    
-    vf.Loop(vm["out-file"].as<std::string>().c_str());
+    mAIDA::VariableFiller vf(vm["in-file"].as<std::string>().c_str(),vm["out-file"].as<std::string>().c_str());
+    vf.Loop();
     return 0;
 
   } // else if  var-tree

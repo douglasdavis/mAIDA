@@ -25,36 +25,62 @@ namespace mAIDA {
     TFile* _in_file;
     TTree* _in_tree;
 
-    bool _ss, _os, _tri, _four;
+    TFile* _out_file;
+    TTree* _out_tree;
+
+    // Variables for tree, all caps
+    int   IS_EE;
+    int   IS_EU;
+    int   IS_UU; 
+    int   IS_SS;
+    int   IS_OS;
+    int   IS_TRI;
+    int   IS_FOUR;
+    float MET;
+    int   N_JETS;
+    int   N_JETS_B;
+    float HT;
+    float HT_LEPTONS;
+    float HT_JETS;
+    float M_LEPTONS;
+    float M_JETS;  
 
     ClassDef(VariableFiller,1);
 
   public:
 
-    VariableFiller(const char* name)
+    VariableFiller(const char* inname, const char* outname)
     {
-      _in_file = new TFile(name);
+      _in_file = new TFile(inname);
       _in_tree = (TTree*)_in_file->Get("finalstates");
-      _ss   = false; _os   = false;
-      _tri  = false; _four = false;
+
+      _out_file = new TFile(outname,"RECREATE");
+      _out_tree = new TTree("mvavartree","mvavartree");
+
+      _out_tree->Branch("IS_EE",  &IS_EE,  "IS_EE/I");
+      _out_tree->Branch("IS_EU",  &IS_EU,  "IS_EU/I");
+      _out_tree->Branch("IS_UU",  &IS_UU,  "IS_UU/I");
+      _out_tree->Branch("IS_SS",  &IS_SS,  "IS_SS/I");
+      _out_tree->Branch("IS_OS",  &IS_OS,  "IS_OS/I");
+      _out_tree->Branch("IS_TRI", &IS_TRI, "IS_TRI/I");
+      _out_tree->Branch("IS_FOUR",&IS_FOUR,"IS_FOUR/I");
+
+      _out_tree->Branch("MET",       &MET,       "MET/F");
+      _out_tree->Branch("N_JETS",    &N_JETS,    "N_JETS/I");
+      _out_tree->Branch("N_JETS_B",  &N_JETS_B,  "N_JETS_B/I");
+      _out_tree->Branch("HT",        &HT,        "HT/F");
+      _out_tree->Branch("HT_LEPTONS",&HT_LEPTONS,"HT_LEPTONS/F");
+      _out_tree->Branch("HT_JETS",   &HT_JETS,   "HT_JETS/F");
+      _out_tree->Branch("M_LEPTONS", &M_LEPTONS, "M_LEPTONS/F");
+      _out_tree->Branch("M_JETS",    &M_JETS,    "M_JETS/F");
     }
     
     virtual ~VariableFiller() {}
 
-    void set_ss();
-    void set_os();
-    void set_tri();
-    void set_four();
-
-    void Loop(const char* fname);
+    void Loop();
     
   };
 
 }
-
-inline void mAIDA::VariableFiller::set_ss()   { _ss   = true; }
-inline void mAIDA::VariableFiller::set_os()   { _os   = true; }
-inline void mAIDA::VariableFiller::set_tri()  { _tri  = true; }
-inline void mAIDA::VariableFiller::set_four() { _four = true; }
 
 #endif
