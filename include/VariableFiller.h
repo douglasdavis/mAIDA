@@ -36,15 +36,22 @@ namespace mAIDA {
     int   IS_OS;
     int   IS_TRI;
     int   IS_FOUR;
+
     float MET;
     int   N_JETS;
     int   N_JETS_B;
+
     float HT;
     float HT_LEPTONS;
     float HT_JETS;
     float M_LEPTONS;
     float M_JETS;  
 
+    float DR_LL_LJ;
+    float DR_LL_SL;
+    float DPHI_LL_LJ;
+    float DPHI_LL_SL;
+    
     ClassDef(VariableFiller,1);
 
   public:
@@ -73,6 +80,11 @@ namespace mAIDA {
       _out_tree->Branch("HT_JETS",   &HT_JETS,   "HT_JETS/F");
       _out_tree->Branch("M_LEPTONS", &M_LEPTONS, "M_LEPTONS/F");
       _out_tree->Branch("M_JETS",    &M_JETS,    "M_JETS/F");
+
+      _out_tree->Branch("DR_LL_LJ",  &DR_LL_LJ,  "DR_LL_LJ/F");
+      _out_tree->Branch("DR_LL_SL",  &DR_LL_SL,  "DR_LL_SL/F");
+      _out_tree->Branch("DPHI_LL_LJ",&DPHI_LL_LJ,"DPHI_LL_LJ/F");
+      _out_tree->Branch("DPHI_LL_SL",&DPHI_LL_SL,"DPHI_LL_SL/F");
     }
     
     virtual ~VariableFiller() {}
