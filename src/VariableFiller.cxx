@@ -53,6 +53,12 @@ void mAIDA::VariableFiller::Loop()
     HT_LEPTONS = fs->HT_leptons();
     HT_JETS    = fs->HT_jets();
 
+    // get some physics object deltas
+    DR_LL_LJ   = fs->LeadingLepton().four_vector().DeltaR(fs->LeadingJet().four_vector());
+    DR_LL_SL   = fs->LeadingLepton().four_vector().DeltaR(fs->SecondLepton().four_vector());
+    DPHI_LL_LJ = fs->LeadingLepton().four_vector().DeltaPhi(fs->LeadingJet().four_vector());
+    DPHI_LL_SL = fs->LeadingLepton().four_vector().DeltaPhi(fs->SecondLepton().four_vector());
+
     // code to get number of b jets and do four vector combinations
     TLorentzVector all_leptons_4v;
     TLorentzVector all_jets_4v;

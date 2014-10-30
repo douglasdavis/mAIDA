@@ -37,41 +37,11 @@ void mAIDA::Swizzler::Loop()
       std::cout << eventid;
     if ( eventid%2500  == 0 )
       std::cout << ".";
-    
-    for ( auto tup : mAIDA::zip(*el_E,*el_pt,*el_eta,*el_phi,*el_charge,
-				*el_tight,*el_Etcone20,*el_ptcone30,*el_trackz0pvunbiased) ) {
-      float e_E, e_pt, e_eta, e_phi, e_charge;
-      int   e_tight;
-      float e_Etcone20, e_ptcone30, e_trackz0pvunbiased;
-      
-      boost::tie(e_E,e_pt,e_eta,e_phi,e_charge,e_tight,e_Etcone20,
-		 e_ptcone30,e_trackz0pvunbiased) = tup;
 
-      if ( mAIDA::good_el(e_tight,e_pt,e_eta,
-			  e_Etcone20,e_ptcone30,
-			  e_trackz0pvunbiased) ) {
-      
-	mAIDA::Lepton el;
-	el.Set_pdgId(mAIDA::k_el);
-	el.Set_charge(e_charge);
-	el.Set_px(999999);
-	el.Set_py(999999);
-	el.Set_pz(999999);
-	el.Set_PtEtaPhiE(e_pt,
-			 e_eta,
-			 e_phi,
-			 e_E);
-	FinalState.AddLepton(el);
-	SUM_lepton_pt += e_pt;
-      }
-    }
-
-    /*
     for ( auto iel = 0; iel < el_n; ++iel ) {
       if ( mAIDA::good_el(el_tight->at(iel),el_pt->at(iel),el_eta->at(iel),
 			  el_Etcone20->at(iel),el_ptcone30->at(iel),
 			  el_trackz0pvunbiased->at(iel)) ) {
-
 	mAIDA::Lepton el;
 	el.Set_pdgId(mAIDA::k_el);
 	el.Set_charge(el_charge->at(iel));
@@ -86,7 +56,6 @@ void mAIDA::Swizzler::Loop()
 	SUM_lepton_pt += el_pt->at(iel);
       } // if pass all the cuts (see 7 TeV AIDA PRD)
     } // for all electrons
-    */
 
     for ( auto imu = 0; imu < mu_muid_n; ++imu ) {
       if ( mAIDA::good_mu(mu_muid_pt->at(imu),mu_muid_eta->at(imu),

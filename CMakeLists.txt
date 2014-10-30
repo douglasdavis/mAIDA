@@ -53,3 +53,4 @@ target_link_libraries(mAIDAlib ${ROOT_LIBRARIES} TMVA)
 
 add_subdirectory(producers)
 add_subdirectory(readers)
+add_subdirectory(sb)
