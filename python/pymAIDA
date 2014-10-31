@@ -3,7 +3,7 @@
 import argparse
 
 import ROOT
-ROOT.gSystem.Load('lib/libmAIDA')
+ROOT.gSystem.Load('lib/libmAIDAlib')
 from ROOT import mAIDA
 
 parser = argparse.ArgumentParser(description='mAIDA python controller')
