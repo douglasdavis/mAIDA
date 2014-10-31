@@ -12,6 +12,8 @@
 
 #include <boost/iterator/zip_iterator.hpp>
 #include <boost/range.hpp>
+#include <boost/tuple/tuple.hpp>
+
 #include <cmath>
 
 namespace mAIDA {

@@ -37,7 +37,7 @@ void mAIDA::Swizzler::Loop()
       std::cout << eventid;
     if ( eventid%2500  == 0 )
       std::cout << ".";
-    
+
     for ( auto tup : mAIDA::zip(*el_E,*el_pt,*el_eta,*el_phi,*el_charge,
 				*el_tight,*el_Etcone20,*el_ptcone30,*el_trackz0pvunbiased) ) {
       float e_E, e_pt, e_eta, e_phi, e_charge;
@@ -67,27 +67,38 @@ void mAIDA::Swizzler::Loop()
     }
 
     /*
-    for ( auto iel = 0; iel < el_n; ++iel ) {
-      if ( mAIDA::good_el(el_tight->at(iel),el_pt->at(iel),el_eta->at(iel),
-			  el_Etcone20->at(iel),el_ptcone30->at(iel),
-			  el_trackz0pvunbiased->at(iel)) ) {
+    for ( auto tup : mAIDA::zip(*mu_muid_E,*mu_muid_pt,*mu_muid_eta,*mu_muid_phi,*mu_muid_charge,
+				*mu_muid_etcone20,*mu_muid_ptcone30,*mu_muid_id_z0_exPV,
+				*mu_muid_px,*mu_muid_py,*mu_muid_pz) ) {
+      float u_E, u_pt, u_eta, u_phi, u_charge;
+      float u_etcone20, u_ptcone30, u_id_z0_exPV;
+      float u_px, u_py, u_pz;
+      
+      boost::tie(u_E,u_pt,u_eta,u_phi,u_charge,u_etcone20,
+		 u_ptcone30,u_id_z0_exPV,
+		 u_px,u_py,u_pz) = tup;
 
-	mAIDA::Lepton el;
-	el.Set_pdgId(mAIDA::k_el);
-	el.Set_charge(el_charge->at(iel));
-	el.Set_px(999999);
-	el.Set_py(999999);
-	el.Set_pz(999999);
-	el.Set_PtEtaPhiE(el_pt->at(iel),
-			 el_eta->at(iel),
-			 el_phi->at(iel),
-			 el_E->at(iel));
-	FinalState.AddLepton(el);
-	SUM_lepton_pt += el_pt->at(iel);
-      } // if pass all the cuts (see 7 TeV AIDA PRD)
-    } // for all electrons
+      if ( mAIDA::good_mu(u_pt,u_eta,
+			  u_etcone20,u_ptcone30,
+			  u_id_z0_exPV) ) {
+      
+	mAIDA::Lepton mu;
+	mu.Set_pdgId(mAIDA::k_mu);
+	mu.Set_charge(u_charge);
+	mu.Set_px(u_px);
+	mu.Set_py(u_py);
+	mu.Set_pz(u_pz);
+	mu.Set_PtEtaPhiE(u_pt,
+			 u_eta,
+			 u_phi,
+			 u_E);
+	FinalState.AddLepton(mu);
+	SUM_lepton_pt += u_pt;
+      }
+    }
     */
 
+    /*
     for ( auto imu = 0; imu < mu_muid_n; ++imu ) {
       if ( mAIDA::good_mu(mu_muid_pt->at(imu),mu_muid_eta->at(imu),
 			  mu_muid_etcone20->at(imu),mu_muid_ptcone30->at(imu),
@@ -106,7 +117,27 @@ void mAIDA::Swizzler::Loop()
 	SUM_lepton_pt += mu_muid_pt->at(imu);
       } // if pass all cuts (see 7 TeV AIDA PRD)
     } // for all muons
+    */
 
+
+    for ( auto tup : mAIDA::zip(*jet_AntiKt4LCTopo_pt,*jet_AntiKt4LCTopo_eta,
+				*jet_AntiKt4LCTopo_phi,*jet_AntiKt4LCTopo_E,
+				*jet_AntiKt4LCTopo_flavor_weight_MV1) ) {
+      
+      float j_pt, j_eta, j_phi, j_E, j_MV1;
+
+      boost::tie(j_pt,j_eta,j_phi,j_E,j_MV1) = tup;
+
+      if ( mAIDA::good_jet(j_pt,j_eta) ) {
+	mAIDA::Jet jet;
+	jet.Set_PtEtaPhiE(j_pt,j_eta,j_phi,j_E);
+	jet.Set_MV1(j_MV1);
+	FinalState.AddJet(jet);
+	SUM_jet_pt += j_pt;
+      }
+    }
+    
+    /*
     for ( auto ijet = 0; ijet < jet_AntiKt4LCTopo_n; ++ijet ) {
       if ( mAIDA::good_jet(jet_AntiKt4LCTopo_pt->at(ijet),jet_AntiKt4LCTopo_eta->at(ijet)) ) {
 	mAIDA::Jet jet;
@@ -119,7 +150,8 @@ void mAIDA::Swizzler::Loop()
 	SUM_jet_pt += jet_AntiKt4LCTopo_pt->at(ijet);
       } // if pass all the cuts (see 7 TeV AIDA PRD)
     } // for all jets
-
+    */
+    
     FinalState.Set_HT(SUM_jet_pt + SUM_lepton_pt);
     FinalState.Set_HT_leptons(SUM_lepton_pt);
     FinalState.Set_HT_jets(SUM_jet_pt);
