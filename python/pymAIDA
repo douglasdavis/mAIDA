@@ -90,3 +90,5 @@ if args_tf.mva == True:
 
     if args_tf.wbe == True:
         mvarun.set_wbe_true()
+
+    mvarun.Run()

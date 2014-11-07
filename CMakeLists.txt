@@ -15,9 +15,9 @@ else()
   message("-- ROOT 6 set OFF")
 endif()
 
-#find_package(Boost REQUIRED COMPONENTS program_options)
-#include_directories("${Boost_INCLUDE_DIRS}")
-#link_directories("${Boost_LIBRARY_DIR}")
+find_package(Boost REQUIRED COMPONENTS program_options)
+include_directories("${Boost_INCLUDE_DIRS}")
+link_directories("${Boost_LIBRARY_DIR}")
 
 find_package(ROOT REQUIRED)
 include_directories("${ROOT_INCLUDE_DIR}")
@@ -53,6 +53,6 @@ add_library(
 
 target_link_libraries(mAIDAclasses ${ROOT_LIBRARIES} TMVA)
 
-#add_subdirectory(producers)
-#add_subdirectory(readers)
-#add_subdirectory(sb)
+add_subdirectory(producers)
+add_subdirectory(readers)
+add_subdirectory(sb)

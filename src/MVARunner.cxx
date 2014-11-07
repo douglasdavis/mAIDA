@@ -3,6 +3,7 @@
 #include <map>
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 #include "TMVA/Factory.h"
 #include "TMVA/Tools.h"
 
@@ -15,6 +16,7 @@ mAIDA::MVARunner::~MVARunner() {}
 
 void mAIDA::MVARunner::Run()
 {
+  std::cout << "STARTING RUN" << std::endl;
   mAIDA::MVASigBkg sb_set;
   sb_set.set_sig(_sig_file.c_str(),
 		 _sig_file.c_str(),
@@ -26,7 +28,9 @@ void mAIDA::MVARunner::Run()
 
   // if weight-by-entries flag
   if ( _wbe ) sb_set.weight_by_entries();
-    
+
+  std::cout << "MADE IT TOO WBE" << std::endl;
+  
   std::cout << sb_set.sig_tree()->GetEntries() << " " << sb_set.sig_weight() << " " 
 	    << sb_set.sig_tree()->GetEntries()*sb_set.sig_weight() << std::endl;
   for ( auto const& sample : sb_set.bkg_trees() ) {
@@ -41,6 +45,8 @@ void mAIDA::MVARunner::Run()
   TMVA::Factory *factory = new TMVA::Factory("TMVAClassification",TMVAFile,
 					     factory_settings.c_str());
 
+  std::cout << "MADE IT TO THE FACTORY" << std::endl;
+  
   // make a map which holds the variable name as key, and a mair which is the units and variable type
   // example: name = "ht", units would be "MeV", type would be float, so 'F'
   // map is filled from var list file of that form in that order
