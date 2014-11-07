@@ -36,6 +36,7 @@ ROOT_GENERATE_DICTIONARY(
   include/Swizzler.h
   include/VariableFiller.h
   include/MVASigBkg.h
+  include/LeptonPair.h
   LINKDEF include/LinkDef.h
   )
 
