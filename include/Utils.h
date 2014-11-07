@@ -10,9 +10,9 @@
 #ifndef mAIDA_Utils_h
 #define mAIDA_Utils_h
 
-#include <boost/iterator/zip_iterator.hpp>
-#include <boost/range.hpp>
-#include <boost/tuple/tuple.hpp>
+//#include <boost/iterator/zip_iterator.hpp>
+//#include <boost/range.hpp>
+//#include <boost/tuple/tuple.hpp>
 
 #include <cmath>
 
@@ -69,7 +69,8 @@ namespace mAIDA {
   {
     return (eta1 - eta2);
   }
-  
+
+  /*
   template <typename... T>
   inline auto zip(const T&... containers) -> boost::iterator_range<boost::zip_iterator<decltype(boost::make_tuple(std::begin(containers)...))>>
   {
@@ -77,7 +78,8 @@ namespace mAIDA {
     auto zip_end   = boost::make_zip_iterator(boost::make_tuple(std::end(containers)...));
     return boost::make_iterator_range(zip_begin, zip_end);
   }
-  
+  */
+
   enum pdg_codes {
 
     k_d    = 1,  k_u    = 2,  k_s    = 3,  k_c    = 4,
