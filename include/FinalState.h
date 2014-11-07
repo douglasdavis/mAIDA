@@ -44,7 +44,7 @@ namespace mAIDA {
 
     void AddLepton(const mAIDA::Lepton& lepton);               //!< add a lepton
     void AddJet(const mAIDA::Jet& jet);                        //!< add a jet
-    void EvaluateSelf();                                       //!< figures out other private variables from other vars
+    void EvaluateSelf();                                       //!< calculates some member variables
     void ClearVecs();                                          //!< clear the jet and lepton vectors
     void Set_MET(const float i);                               //!< set the missing E_T
     void Set_HT(const float i);                                //!< set event HT
