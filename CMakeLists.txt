@@ -37,6 +37,7 @@ ROOT_GENERATE_DICTIONARY(
   include/VariableFiller.h
   include/MVASigBkg.h
   include/LeptonPair.h
+  include/MVARunner.h
   LINKDEF include/LinkDef.h
   )
 

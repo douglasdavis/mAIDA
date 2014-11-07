@@ -3,12 +3,24 @@
 import argparse
 
 import ROOT
-ROOT.gSystem.Load('lib/libmAIDAlib')
+ROOT.gSystem.Load('lib/libmAIDAclasses')
 from ROOT import mAIDA
 
 parser = argparse.ArgumentParser(description='mAIDA python controller')
 parser.add_argument('-f','--fst',
                     help='flag to make final state tree (swizzle)',
+                    required=False,
+                    action='store_true')
+parser.add_argument('-v','--var-tree',
+                    help='var tree maker',
+                    required=False,
+                    action='store_true')
+parser.add_argument('-m','--mva',
+                    help='flag to run mva',
+                    required=False,
+                    action='store_true')
+parser.add_argument('-w','--wbe',
+                    help='flag to weight be nevents',
                     required=False,
                     action='store_true')
 parser.add_argument('-o','--output-file',
@@ -20,10 +32,21 @@ parser.add_argument('-i','--input-file',
 parser.add_argument('-d','--data-dir',
                     help='fst data directory',
                     required=False)
-parser.add_argument('-v','--var-tree',
-                    help='var tree maker',
-                    required=False,
-                    action='store_true')
+parser.add_argument('-c','--cut-list',
+                    help='cut list for mva',
+                    required=False)
+parser.add_argument('-l','--var-list',
+                    help='var list for mva',
+                    required=False)
+parser.add_argument('-s','--sig',
+                    help='signal file for mva',
+                    required=False)
+parser.add_argument('-b','--bkg',
+                    help='background files for mva',
+                    required=False)
+parser.add_argument('-e','--methods',
+                    help='methods for mva',
+                    required=False)
 
 args    = vars(parser.parse_args())
 args_tf = parser.parse_args()
@@ -36,3 +59,34 @@ if args_tf.fst == True:
 if args_tf.var_tree == True:
     vf = mAIDA.VariableFiller(args['input_file'],args['output_file'])
     vf.Loop()
+
+
+if args_tf.mva == True:
+    
+    sig_file  = args['sig']
+    bkg_files = args['bkg'].split(',')
+    cut_file  = args['cut_list']
+    var_file  = args['var_list']
+    met_list  = args['methods'].split(',')
+    out_file  = args['output_file']
+    
+    print sig_file
+    print bkg_files
+    print cut_file
+    print var_file
+    print met_list
+    
+    mvarun = mAIDA.MVARunner()
+    mvarun.set_sig_file(sig_file)
+    mvarun.set_cut_file(cut_file)
+    mvarun.set_var_file(var_file)
+    mvarun.set_out_file(out_file)
+    
+    for bf in bkg_files:
+        mvarun.add_bkg_file(bf)
+
+    for met in met_list:
+        mvarun.add_method(met)
+
+    if args_tf.wbe == True:
+        mvarun.set_wbe_true()

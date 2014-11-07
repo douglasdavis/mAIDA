@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     ("out-file,o",  bpo::value<std::string>(),"Output ROOT file name (always required)")
     ("in-file,i",   bpo::value<std::string>(),"Input ROOT file name (required for var-tree)")
     ("sig,s",       bpo::value<std::string>(),"sig ROOT file required for mva")
-    ("bkgs,b",      bpo::value<std::vector<std::string> >()->multitoken(), "background ROOT files required for mva")
+    ("bkgs,b",      bpo::value<std::vector<std::string> >()->multitoken(),"background ROOT files required for mva")
     ("methods,e",   bpo::value<std::vector<std::string> >()->multitoken(),"MVA Methods to use (e.g. BDT, ANN)")
     ("var-list,l",  bpo::value<std::string>(),"file which contains variable list for MVA use")
     ("cut-list,c",  bpo::value<std::string>(),"file which contains cut list for MVA use");
