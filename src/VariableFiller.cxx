@@ -36,11 +36,11 @@ void mAIDA::VariableFiller::Loop()
     
     // do flavoring/signing for dilepton
     if ( fs->Leptons().size() == 2 ) {
-      if ( fs->chargeSum()       == 0  ) IS_OS = 1;
+      if ( std::fabs(fs->chargeSum()) == 0  ) IS_OS = 1;
       if ( std::fabs(fs->chargeSum()) == 2  ) IS_SS = 1;
-      if ( std::abs(fs->pdgIdSum())  == 22 ) IS_EE = 1;
-      if ( std::abs(fs->pdgIdSum())  == 24 ) IS_EU = 1;
-      if ( std::abs(fs->pdgIdSum())  == 26 ) IS_UU = 1;
+      if ( std::abs(fs->pdgIdSum())   == 22 ) IS_EE = 1;
+      if ( std::abs(fs->pdgIdSum())   == 24 ) IS_EU = 1;
+      if ( std::abs(fs->pdgIdSum())   == 26 ) IS_UU = 1;
     }
     
     if ( fs->Leptons().size() == 3 ) IS_TRI  = 1;
