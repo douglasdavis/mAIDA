@@ -1,5 +1,16 @@
-#ifndef LeptonPair_h
-#define LeptonPair_h
+/** @file LeptonPair.h
+ *  @brief mAIDA::LeptonPair class header
+ *  @class mAIDA::LeptonPair
+ *  @brief a reconstructed Lepton Pair 
+ *
+ *  This class describes the properties
+ *  of a reconstructed Lepton Pair.
+ *
+ *  @author Douglas Davis < drd25@phy.duke.edu >
+ */
+
+#ifndef mAIDA_LeptonPair_h
+#define mAIDA_LeptonPair_h
 
 #include "TLorentzVector.h"
 #include "Lepton.h"
@@ -57,4 +68,4 @@ inline       bool            mAIDA::LeptonPair::is_ee()       const { return _is
 inline       bool            mAIDA::LeptonPair::is_uu()       const { return _is_uu;       }
 inline       bool            mAIDA::LeptonPair::is_eu()       const { return _is_eu;       }
  
-#endif
+#endif //* mAIDA_LeptonPair_h *//
