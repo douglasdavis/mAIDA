@@ -44,17 +44,17 @@ namespace mAIDA {
 
   };
 
-  inline const mAIDA::Lepton&  mAIDA::LeptonPair::lepton1()     const { return _lepton_1;    }
-  inline const mAIDA::Lepton&  mAIDA::LeptonPair::lepton2()     const { return _lepton_2;    }
-  inline const TLorentzVector& mAIDA::LeptonPair::four_vector() const { return _four_vector; }
-  inline       int             mAIDA::LeptonPair::pdg_sum()     const { return _pdg_sum;     }
-  inline       float           mAIDA::LeptonPair::M()           const { return _inv_mass;    }
-  inline       bool            mAIDA::LeptonPair::isOS()        const { return _isOS;        }
-  inline       bool            mAIDA::LeptonPair::within_Z()    const { return _within_Z;    } 
-  inline       bool            mAIDA::LeptonPair::is_ee()       const { return _is_ee;       }
-  inline       bool            mAIDA::LeptonPair::is_uu()       const { return _is_uu;       }
-  inline       bool            mAIDA::LeptonPair::is_eu()       const { return _is_eu;       }
- 
 }
 
+inline const mAIDA::Lepton&  mAIDA::LeptonPair::lepton1()     const { return _lepton_1;    }
+inline const mAIDA::Lepton&  mAIDA::LeptonPair::lepton2()     const { return _lepton_2;    }
+inline const TLorentzVector& mAIDA::LeptonPair::four_vector() const { return _four_vector; }
+inline       int             mAIDA::LeptonPair::pdg_sum()     const { return _pdg_sum;     }
+inline       float           mAIDA::LeptonPair::M()           const { return _inv_mass;    }
+inline       bool            mAIDA::LeptonPair::isOS()        const { return _isOS;        }
+inline       bool            mAIDA::LeptonPair::within_Z()    const { return _within_Z;    } 
+inline       bool            mAIDA::LeptonPair::is_ee()       const { return _is_ee;       }
+inline       bool            mAIDA::LeptonPair::is_uu()       const { return _is_uu;       }
+inline       bool            mAIDA::LeptonPair::is_eu()       const { return _is_eu;       }
+ 
 #endif
