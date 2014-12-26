@@ -1,3 +1,14 @@
+/** @file MVARunner.h
+ *  @brief mAIDA::MVARunner class header
+ *  @class mAIDA::MVARunner
+ *  @brief Run the MVA with an object
+ *
+ *  This class provides and easy way to 
+ *  run the MVA step
+ *
+ *  @author Douglas Davis < drd25@phy.duke.edu >
+ */
+
 #ifndef mAIDA_MVARunner_h
 #define mAIDA_MVARunner_h
 

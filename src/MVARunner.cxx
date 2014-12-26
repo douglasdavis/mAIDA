@@ -1,3 +1,9 @@
+/** @file MVARunner.cxx
+ *  @brief mAIDA::MVARunner class implementation
+ *
+ *  @author Douglas Davis < drd25@phy.duke.edu >
+ */
+
 #include "MVARunner.h"
 #include "MVASigBkg.h"
 #include <map>
