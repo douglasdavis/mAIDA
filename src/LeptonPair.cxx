@@ -1,3 +1,9 @@
+/** @file LeptonPair.cxx
+ *  @brief mAIDA::LeptonPair class implementation
+ *
+ *  @author Douglas Davis < drd25@phy.duke.edu >
+ */
+
 #include "LeptonPair.h"
 #include <cmath>
 
