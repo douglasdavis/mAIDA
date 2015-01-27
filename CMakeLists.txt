@@ -18,9 +18,9 @@ link_directories("${ROOT_LIBRARY_DIR}")
 
 option(ROOT6 "ROOT6" OFF)
 if(ROOT6)
-  message("-- ROOT 6 set ON")
+  message("-- ROOT 6 CMake option set ON")
 else()
-  message("-- ROOT 6 set OFF")
+  message("-- ROOT 6 CMake option set OFF (default even for ROOT version 6 installation)")
 endif()
 
 include_directories("${CMAKE_SOURCE_DIR}")

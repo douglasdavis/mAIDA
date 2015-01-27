@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -rf bin build lib
+rm -rf bin build lib *.root
