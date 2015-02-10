@@ -20,5 +20,6 @@ cd $mAIDA_BASE/build
 cmake $mAIDA_BASE
 make
 cd $mAIDA_BASE
+ln -s $mAIDA_BASE/build/mAIDAclassesdict_rdict.pcm $mAIDA_BASE/lib/mAIDAclassesdict_rdict.pcm
 export PATH=$PATH:$mAIDA_BASE/bin
 export PATH=$PATH:$mAIDA_BASE/python
