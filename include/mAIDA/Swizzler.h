@@ -13,8 +13,8 @@
 #ifndef mAIDA_Swizzler_h
 #define mAIDA_Swizzler_h
 
-#include "FinalState.h"
-#include "Reader.h"
+#include "mAIDA/FinalState.h"
+#include "mAIDA/Reader.h"
 
 namespace mAIDA {
 

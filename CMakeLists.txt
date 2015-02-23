@@ -28,17 +28,17 @@ include_directories("${CMAKE_SOURCE_DIR}/include")
 
 ROOT_GENERATE_DICTIONARY(
   mAIDAclassesdict
-  include/Reader.h
-  include/PhysicsObject.h
-  include/Jet.h
-  include/Lepton.h
-  include/FinalState.h
-  include/Swizzler.h
-  include/VariableFiller.h
-  include/MVASigBkg.h
-  include/LeptonPair.h
-  include/MVARunner.h
-  LINKDEF include/LinkDef.h
+  include/mAIDA/Reader.h
+  include/mAIDA/PhysicsObject.h
+  include/mAIDA/Jet.h
+  include/mAIDA/Lepton.h
+  include/mAIDA/FinalState.h
+  include/mAIDA/Swizzler.h
+  include/mAIDA/VariableFiller.h
+  include/mAIDA/MVASigBkg.h
+  include/mAIDA/LeptonPair.h
+  include/mAIDA/MVARunner.h
+  LINKDEF include/mAIDA/LinkDef.h
   )
 
 file(GLOB mAIDAclasses_src
@@ -52,6 +52,9 @@ add_library(
   )
 
 target_link_libraries(mAIDAclasses ${ROOT_LIBRARIES} TMVA)
+
+install(DIRECTORY include/mAIDA DESTINATION "${CMAKE_INSTALL_PREFIX}/include")
+install(TARGETS mAIDAclasses DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
 
 add_subdirectory(producers)
 add_subdirectory(readers)

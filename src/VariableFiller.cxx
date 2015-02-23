@@ -7,8 +7,8 @@
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#include "VariableFiller.h"
-#include "FinalState.h"
+#include "mAIDA/VariableFiller.h"
+#include "mAIDA/FinalState.h"
 #include <iostream>
 #include <algorithm>
 

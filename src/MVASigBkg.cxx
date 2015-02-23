@@ -4,7 +4,7 @@
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#include "MVASigBkg.h"
+#include "mAIDA/MVASigBkg.h"
 
 namespace mAIDA {
 

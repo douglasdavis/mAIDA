@@ -4,8 +4,8 @@
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#include "Swizzler.h"
-#include "Utils.h"
+#include "mAIDA/Swizzler.h"
+#include "mAIDA/Utils.h"
 #include <iostream>
 
 mAIDA::Swizzler::Swizzler(const char *fname, const char* tname)

@@ -12,7 +12,7 @@
 #ifndef mAIDA_Jet_h
 #define mAIDA_Jet_h
 
-#include "PhysicsObject.h"
+#include "mAIDA/PhysicsObject.h"
 #include "TObject.h"
 
 namespace mAIDA {

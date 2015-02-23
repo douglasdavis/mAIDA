@@ -13,7 +13,7 @@
 #define mAIDA_LeptonPair_h
 
 #include "TLorentzVector.h"
-#include "Lepton.h"
+#include "mAIDA/Lepton.h"
 
 namespace mAIDA {
 

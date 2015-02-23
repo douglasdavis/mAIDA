@@ -4,7 +4,7 @@
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#include "Reader.h"
+#include "mAIDA/Reader.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>

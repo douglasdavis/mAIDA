@@ -4,8 +4,8 @@
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#include "MVARunner.h"
-#include "MVASigBkg.h"
+#include "mAIDA/MVARunner.h"
+#include "mAIDA/MVASigBkg.h"
 #include <map>
 #include <algorithm>
 #include <fstream>

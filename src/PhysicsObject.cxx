@@ -4,7 +4,7 @@
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#include "PhysicsObject.h"
+#include "mAIDA/PhysicsObject.h"
 
 mAIDA::PhysicsObject::PhysicsObject() {}
 

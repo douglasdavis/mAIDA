@@ -14,8 +14,8 @@
 
 #include <vector>
 #include "TObject.h"
-#include "Jet.h"
-#include "Lepton.h"
+#include "mAIDA/Jet.h"
+#include "mAIDA/Lepton.h"
 
 namespace mAIDA {
 

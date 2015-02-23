@@ -1,7 +1,7 @@
 // mAIDA
-#include "Swizzler.h"
-#include "VariableFiller.h"
-#include "MVASigBkg.h"
+#include "mAIDA/Swizzler.h"
+#include "mAIDA/VariableFiller.h"
+#include "mAIDA/MVASigBkg.h"
 // Boost
 #include "boost/program_options.hpp"
 // C/C++

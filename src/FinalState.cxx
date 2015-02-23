@@ -4,7 +4,7 @@
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#include "FinalState.h"
+#include "mAIDA/FinalState.h"
 
 namespace mAIDA {
   

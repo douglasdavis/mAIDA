@@ -4,7 +4,7 @@
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#include "Jet.h"
+#include "mAIDA/Jet.h"
 
 namespace mAIDA {
 

@@ -4,7 +4,7 @@
  *  @author Douglas Davis < drd25@phy.duke.edu >
  */
 
-#include "LeptonPair.h"
+#include "mAIDA/LeptonPair.h"
 #include <cmath>
 
 mAIDA::LeptonPair::LeptonPair(const mAIDA::Lepton& l1, const mAIDA::Lepton& l2)

@@ -12,7 +12,7 @@
 #ifndef mAIDA_Lepton_h
 #define mAIDA_Lepton_h
 
-#include "PhysicsObject.h"
+#include "mAIDA/PhysicsObject.h"
 
 namespace mAIDA {
 
