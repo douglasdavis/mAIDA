@@ -4,5 +4,16 @@ multivariate AIDA
 
 Douglas Davis < drd25@phy.duke.edu >
 
-To build and setup environment:
+To build and setup environment in the base mAIDA directory:
 $ source Setup.sh
+$ mAIDA
+
+To install mAIDA to an independent install directory
+$ mkdir build
+$ cd build
+$ cmake [OPTIONS] -DCMAKE_INSTALL_PREFIX=/path/to/desired/install/dir ..
+$ make
+$ make install
+$ cd /path/to/desired/install/dir
+$ source config/setupenv.sh
+$ mAIDA
