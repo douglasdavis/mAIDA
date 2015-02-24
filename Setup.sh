@@ -6,9 +6,9 @@ if [[ $hoststring == *atl* ]]
 then
     export CXX=g++;
     export CC=gcc;
-    export PATH=/home/$user/localCMake/bin:$PATH
-    export PATH=/home/$user/sw/atl_cmake/bin:$PATH
-    export BOOST_ROOT=/home/$user/sw/atl_boost
+    export PATH=/home/drd25/localCMake/bin:$PATH
+    export PATH=/home/drd25/sw/atl_cmake/bin:$PATH
+    export BOOST_ROOT=/home/drd25/sw/atl_boost
 fi
 
 export mAIDA_BASE=$PWD
