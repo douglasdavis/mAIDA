@@ -55,6 +55,10 @@ target_link_libraries(mAIDAclasses ${ROOT_LIBRARIES} TMVA)
 
 install(DIRECTORY include/mAIDA DESTINATION "${CMAKE_INSTALL_PREFIX}/include")
 install(TARGETS mAIDAclasses DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
+install(DIRECTORY config DESTINATION "${CMAKE_INSTALL_PREFIX}")
+if(ROOT6)
+  install(FILES build/mAIDAclassesdict_rdict.pcm DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
+endif()
 
 add_subdirectory(producers)
 add_subdirectory(readers)
