@@ -57,7 +57,7 @@ install(DIRECTORY include/mAIDA DESTINATION "${CMAKE_INSTALL_PREFIX}/include")
 install(TARGETS mAIDAclasses DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
 install(DIRECTORY config DESTINATION "${CMAKE_INSTALL_PREFIX}")
 if(ROOT6)
-  install(FILES build/mAIDAclassesdict_rdict.pcm DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
+  install(FILES ${CMAKE_BINARY_DIR}/mAIDAclassesdict_rdict.pcm DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
 endif()
 
 add_subdirectory(producers)
