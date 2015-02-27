@@ -71,8 +71,8 @@ namespace mAIDA {
 inline void mAIDA::FinalState::AddLepton(const mAIDA::Lepton& lepton)     { _Leptons.push_back(lepton);        }
 inline void mAIDA::FinalState::AddJet(const mAIDA::Jet& jet)              { _Jets.push_back(jet);              }
 inline void mAIDA::FinalState::ClearVecs()                                { _Leptons.clear(); _Jets.clear();   }
-inline void mAIDA::FinalState::Set_MET(const float i)                     { _MET = i;                          }
-inline void mAIDA::FinalState::Set_HT(const float i)                      { _HT  = i;                          }
+inline void mAIDA::FinalState::Set_MET(const float i)                     { _MET        = i;                   }
+inline void mAIDA::FinalState::Set_HT(const float i)                      { _HT         = i;                   }
 inline void mAIDA::FinalState::Set_HT_leptons(const float i)              { _HT_leptons = i;                   }
 inline void mAIDA::FinalState::Set_HT_jets(const float i)                 { _HT_jets    = i;                   }
 

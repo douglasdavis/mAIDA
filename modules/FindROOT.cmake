@@ -15,25 +15,25 @@ find_program(ROOT_CONFIG_EXECUTABLE root-config
   PATHS $ENV{ROOTSYS}/bin)
 
 execute_process(
-    COMMAND ${ROOT_CONFIG_EXECUTABLE} --prefix
-    OUTPUT_VARIABLE ROOTSYS
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  COMMAND ${ROOT_CONFIG_EXECUTABLE} --prefix
+  OUTPUT_VARIABLE ROOTSYS
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 execute_process(
-    COMMAND ${ROOT_CONFIG_EXECUTABLE} --version
-    OUTPUT_VARIABLE ROOT_VERSION
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  COMMAND ${ROOT_CONFIG_EXECUTABLE} --version
+  OUTPUT_VARIABLE ROOT_VERSION
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 execute_process(
-    COMMAND ${ROOT_CONFIG_EXECUTABLE} --incdir
-    OUTPUT_VARIABLE ROOT_INCLUDE_DIR
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  COMMAND ${ROOT_CONFIG_EXECUTABLE} --incdir
+  OUTPUT_VARIABLE ROOT_INCLUDE_DIR
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
 set(ROOT_INCLUDE_DIRS ${ROOT_INCLUDE_DIR})
 
 execute_process(
-    COMMAND ${ROOT_CONFIG_EXECUTABLE} --libdir
-    OUTPUT_VARIABLE ROOT_LIBRARY_DIR
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  COMMAND ${ROOT_CONFIG_EXECUTABLE} --libdir
+  OUTPUT_VARIABLE ROOT_LIBRARY_DIR
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
 set(ROOT_LIBRARY_DIRS ${ROOT_LIBRARY_DIR})
 
 set(rootlibs Core Cint RIO Net Hist Graf Graf3d Gpad Tree Rint Postscript Matrix Physics MathCore Thread)
@@ -58,7 +58,7 @@ endforeach()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(ROOT DEFAULT_MSG ROOT_CONFIG_EXECUTABLE
-    ROOTSYS ROOT_VERSION ROOT_INCLUDE_DIR ROOT_LIBRARIES ROOT_LIBRARY_DIR)
+  ROOTSYS ROOT_VERSION ROOT_INCLUDE_DIR ROOT_LIBRARIES ROOT_LIBRARY_DIR)
 
 mark_as_advanced(ROOT_CONFIG_EXECUTABLE)
 
@@ -78,7 +78,7 @@ function(ROOT_GENERATE_DICTIONARY dictionary)
   get_directory_property(incdirs INCLUDE_DIRECTORIES)
   set(includedirs)
   foreach( d ${incdirs})
-     set(includedirs ${includedirs} -I${d})
+    set(includedirs ${includedirs} -I${d})
   endforeach()
   #---Get the list of header files-------------------------
   set(headerfiles)
@@ -105,9 +105,9 @@ function(ROOT_GENERATE_DICTIONARY dictionary)
   endforeach()
   #---call rootcint------------------------------------------
   add_custom_command(OUTPUT ${dictionary}.cxx
-                     COMMAND ${ROOTCINT_EXECUTABLE} -cint -f  ${dictionary}.cxx
-                                          -c ${ARG_OPTIONS} ${includedirs} ${headerfiles} ${linkdefs}
-                     DEPENDS ${headerfiles} ${linkdefs} VERBATIM)
+    COMMAND ${ROOTCINT_EXECUTABLE} -cint -f  ${dictionary}.cxx
+    -c ${ARG_OPTIONS} ${includedirs} ${headerfiles} ${linkdefs}
+    DEPENDS ${headerfiles} ${linkdefs} VERBATIM)
 endfunction()
 
 #----------------------------------------------------------------------------
@@ -144,7 +144,7 @@ function(REFLEX_GENERATE_DICTIONARY dictionary)
   #---Get preprocessor definitions--------------------------
   get_directory_property(defs COMPILE_DEFINITIONS)
   foreach( d ${defs})
-   set(definitions ${definitions} -D${d})
+    set(definitions ${definitions} -D${d})
   endforeach()
   #---Nanes and others---------------------------------------
   set(gensrcdict ${dictionary}.cpp)
@@ -164,8 +164,8 @@ function(REFLEX_GENERATE_DICTIONARY dictionary)
   endif()
   #---Actual command----------------------------------------
   add_custom_command(OUTPUT ${gensrcdict} ${rootmapname}
-                     COMMAND ${GENREFLEX_EXECUTABLE} ${headerfiles} -o ${gensrcdict} ${gccxmlopts} ${rootmapopts} --select=${selectionfile}
-                             --gccxmlpath=${gccxmlpath} ${ARG_OPTIONS} ${includedirs} ${definitions}
-                     DEPENDS ${headerfiles} ${selectionfile})
+    COMMAND ${GENREFLEX_EXECUTABLE} ${headerfiles} -o ${gensrcdict} ${gccxmlopts} ${rootmapopts} --select=${selectionfile}
+    --gccxmlpath=${gccxmlpath} ${ARG_OPTIONS} ${includedirs} ${definitions}
+    DEPENDS ${headerfiles} ${selectionfile})
 endfunction()
 

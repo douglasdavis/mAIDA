@@ -42,11 +42,15 @@ void mAIDA::Swizzler::Loop()
     // then create variables to be tied to the current zipped tuple
     // those variables are then used to fill the final state vector.
     
+    int   e_tight;
+    float e_E, e_pt, e_eta, e_phi, e_charge;
+    float e_Etcone20, e_ptcone30, e_trackz0pvunbiased;
+    float u_E, u_pt, u_eta, u_phi, u_charge;
+    float u_etcone20, u_ptcone30, u_id_z0_exPV;
+    float j_pt, j_eta, j_phi, j_E, j_MV1;
+    
     for ( auto const& tup : mAIDA::zip(*el_E,*el_pt,*el_eta,*el_phi,*el_charge,*el_tight,
 				       *el_Etcone20,*el_ptcone30,*el_trackz0pvunbiased) ) {
-      float e_E, e_pt, e_eta, e_phi, e_charge;
-      int   e_tight;
-      float e_Etcone20, e_ptcone30, e_trackz0pvunbiased;
       boost::tie(e_E,e_pt,e_eta,e_phi,e_charge,e_tight,e_Etcone20,
 		 e_ptcone30,e_trackz0pvunbiased) = tup;
 
@@ -63,8 +67,6 @@ void mAIDA::Swizzler::Loop()
     for ( auto const& tup : mAIDA::zip(*mu_muid_E,*mu_muid_pt,*mu_muid_eta,*mu_muid_phi,
 				       *mu_muid_charge,*mu_muid_etcone20,*mu_muid_ptcone30,
 				       *mu_muid_id_z0_exPV) ) {
-      float u_E, u_pt, u_eta, u_phi, u_charge;
-      float u_etcone20, u_ptcone30, u_id_z0_exPV;
       boost::tie(u_E,u_pt,u_eta,u_phi,u_charge,u_etcone20,
 		 u_ptcone30,u_id_z0_exPV) = tup;
 
@@ -84,7 +86,6 @@ void mAIDA::Swizzler::Loop()
     for ( auto const& tup : mAIDA::zip(*jet_AntiKt4LCTopo_pt,*jet_AntiKt4LCTopo_eta,
 				       *jet_AntiKt4LCTopo_phi,*jet_AntiKt4LCTopo_E,
 				       *jet_AntiKt4LCTopo_flavor_weight_MV1) ) {      
-      float j_pt, j_eta, j_phi, j_E, j_MV1;
       boost::tie(j_pt,j_eta,j_phi,j_E,j_MV1) = tup;
 
       if ( mAIDA::good_jet(j_pt,j_eta) ) {
