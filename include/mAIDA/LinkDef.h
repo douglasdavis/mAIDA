@@ -13,7 +13,6 @@
 #pragma link C++ class mAIDA::Swizzler+;
 #pragma link C++ class mAIDA::VariableFiller+;
 #pragma link C++ class mAIDA::MVASigBkg+;
-#pragma link C++ class mAIDA::LeptonPair+;
 #pragma link C++ class mAIDA::MVARunner+;
 
 #endif

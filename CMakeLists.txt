@@ -36,7 +36,6 @@ ROOT_GENERATE_DICTIONARY(
   include/mAIDA/Swizzler.h
   include/mAIDA/VariableFiller.h
   include/mAIDA/MVASigBkg.h
-  include/mAIDA/LeptonPair.h
   include/mAIDA/MVARunner.h
   LINKDEF include/mAIDA/LinkDef.h
   )
